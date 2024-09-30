@@ -1,0 +1,8 @@
+typer >= 0.12.1
+openai >= 1.46.1
+beautifulsoup4 >= 4.12.3
+requests >= 2.32.3
+pandas >= 2.2.3
+tiktoken >= 0.7.0
+matplotlib >= 3.9.2
+scipy >= 1.14.1

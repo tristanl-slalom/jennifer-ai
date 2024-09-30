@@ -1,0 +1,6 @@
+venv/
+processed/
+text/
+.DS_Store
+.idea/
+*.pyc
