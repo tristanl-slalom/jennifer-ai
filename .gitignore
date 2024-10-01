@@ -4,3 +4,4 @@ text/
 .DS_Store
 .idea/
 *.pyc
+output/

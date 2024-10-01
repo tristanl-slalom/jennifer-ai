@@ -17,8 +17,8 @@ def crawl_action(url: str, rebuild: bool, must_include: str):
 
     seen = {url}
 
-    text_dir = Path("text")
-    text_domain_dir = text_dir / local_domain
+    output_path = Path("output")
+    text_domain_dir = output_path / "text" / local_domain
 
     if text_domain_dir.exists():
         if not rebuild:
@@ -32,10 +32,13 @@ def crawl_action(url: str, rebuild: bool, must_include: str):
         url = queue.pop()
         print(url)
 
-        santized_url_sans_protocol = url[8:].replace("/", "__")
-        with open(text_domain_dir / f"{santized_url_sans_protocol}.txt", "w", encoding="utf-8") as f:
+        santized_url_sans_protocol = url[8:].replace("/", "__").replace(":", "--")[:64]
+        with open(
+            text_domain_dir / f"{santized_url_sans_protocol}.txt", "w", encoding="utf-8"
+        ) as f:
             try:
-                soup = BeautifulSoup(requests.get(url).text, "html.parser")
+                raw_page = requests.get(url, headers={"User-Agent": "XY"})
+                soup = BeautifulSoup(raw_page.text, "html.parser")
 
                 text = soup.get_text()
 
@@ -50,5 +53,3 @@ def crawl_action(url: str, rebuild: bool, must_include: str):
             if link not in seen and (not must_include or must_include in link):
                 queue.append(link)
                 seen.add(link)
-
-

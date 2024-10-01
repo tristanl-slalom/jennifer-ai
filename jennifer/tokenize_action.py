@@ -3,6 +3,7 @@ from pathlib import Path
 import pandas as pd
 import tiktoken
 
+from jennifer.utilities import extract_domain
 
 MAX_TOKENS = 500
 
@@ -11,7 +12,7 @@ MAX_TOKENS = 500
 def split_into_many(tokenizer, text, max_tokens=MAX_TOKENS):
 
     # Split the text into sentences
-    sentences = text.split('. ')
+    sentences = text.split(". ")
 
     # Get the number of tokens for each sentence
     n_tokens = [len(tokenizer.encode(" " + sentence)) for sentence in sentences]
@@ -43,23 +44,28 @@ def split_into_many(tokenizer, text, max_tokens=MAX_TOKENS):
     return chunks
 
 
-def tokenize_action(domain: str, rebuild: bool):
-    domain = domain[8:domain.index("/", 8)]
-    tokens_path = Path(f'processed/{domain}-tokens.csv')
+def tokenize_action(url: str, rebuild: bool):
+    domain = extract_domain(url)
+
+    output_path = Path("output")
+    processed_domain_path = output_path / "processed" / f"{domain}.csv"
+    tokens_path = output_path / "processed" / f"{domain}-tokens.csv"
     if tokens_path.exists() and not rebuild:
         return
+
+    if not processed_domain_path.exists():
+        raise FileNotFoundError(
+            f"processed domain path for {domain} not found; run process first!"
+        )
 
     # Load the cl100k_base tokenizer which is designed to work with the ada-002 model
     tokenizer = tiktoken.get_encoding("cl100k_base")
 
-    df = pd.read_csv(f'processed/{domain}.csv', index_col=0)
-    df.columns = ['title', 'text']
+    df = pd.read_csv(processed_domain_path, index_col=0)
+    df.columns = ["title", "text"]
 
     # Tokenize the text and save the number of tokens to a new column
-    df['n_tokens'] = df.text.apply(lambda x: len(tokenizer.encode(x)))
-
-    # Visualize the distribution of the number of tokens per row using a histogram
-    df.n_tokens.hist()
+    df["n_tokens"] = df.text.apply(lambda x: len(tokenizer.encode(x)))
 
     shortened = []
 
@@ -67,19 +73,18 @@ def tokenize_action(domain: str, rebuild: bool):
     for row in df.iterrows():
 
         # If the text is None, go to the next row
-        if row[1]['text'] is None:
+        if row[1]["text"] is None:
             continue
 
         # If the number of tokens is greater than the max number of tokens, split the text into chunks
-        if row[1]['n_tokens'] > MAX_TOKENS:
-            shortened += split_into_many(tokenizer, row[1]['text'])
+        if row[1]["n_tokens"] > MAX_TOKENS:
+            shortened += split_into_many(tokenizer, row[1]["text"])
 
         # Otherwise, add the text to the list of shortened texts
         else:
-            shortened.append(row[1]['text'])
+            shortened.append(row[1]["text"])
 
-    df = pd.DataFrame(shortened, columns=['text'])
-    df['n_tokens'] = df.text.apply(lambda x: len(tokenizer.encode(x)))
-    df.n_tokens.hist()
+    df = pd.DataFrame(shortened, columns=["text"])
+    df["n_tokens"] = df.text.apply(lambda x: len(tokenizer.encode(x)))
 
-    df.to_csv(f'processed/{domain}-tokens.csv')
+    df.to_csv(tokens_path)

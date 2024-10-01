@@ -15,7 +15,7 @@ app = typer.Typer()
 
 
 @app.command()
-def tng_episode(title: str, output_path: Path = Path('./episode.mp3')):
+def tng_episode(title: str, output_path: Path = Path("./episode.mp3")):
     client = OpenAI()
 
     completion = client.chat.completions.create(
@@ -26,8 +26,8 @@ def tng_episode(title: str, output_path: Path = Path('./episode.mp3')):
                 "role": "user",
                 "content": "Come up with a short premise for a hypothetical new Star Trek "
                 f"the next generation episode that fits the title '{title}'. It should be "
-                "a maximum of 3 sentences."
-            }
+                "a maximum of 3 sentences.",
+            },
         ],
     )
 
@@ -37,9 +37,7 @@ def tng_episode(title: str, output_path: Path = Path('./episode.mp3')):
     print(f"{chosen_voice}: {synopsis}")
     speech_file_path = output_path
     with client.audio.speech.with_streaming_response.create(
-        model="tts-1",
-        voice=chosen_voice,
-        input=synopsis
+        model="tts-1", voice=chosen_voice, input=synopsis
     ) as response:
         response.stream_to_file(speech_file_path)
 
@@ -54,10 +52,10 @@ def hello_ai():
             {"role": "system", "content": "You are a helpful assistant."},
             {
                 "role": "user",
-                "content": "Write an essay about the importance of brushing your teeth."
-            }
+                "content": "Write an essay about the importance of brushing your teeth.",
+            },
         ],
-        stream=True
+        stream=True,
     )
 
     for chunk in completion:
@@ -86,7 +84,9 @@ def create_embeddings(url: str, rebuild: bool = False):
 
 
 @app.command()
-def ask_question(url: str, question: str, rebuild: bool = False, must_include: str = None):
+def ask_question(
+    url: str, question: str, rebuild: bool = False, must_include: str = None
+):
     crawl_action(url, rebuild, must_include)
     process_text_action(url, rebuild)
     tokenize_action(url, rebuild)
@@ -95,5 +95,5 @@ def ask_question(url: str, question: str, rebuild: bool = False, must_include: s
 
 
 # Press the green button in the gutter to run the script.
-if __name__ == '__main__':
+if __name__ == "__main__":
     app()

@@ -1,3 +1,4 @@
+from pathlib import Path
 from typing import List
 
 import numpy as np
@@ -5,6 +6,8 @@ import pandas as pd
 from openai import OpenAI
 
 from scipy import spatial
+
+from jennifer.utilities import extract_domain
 
 
 def distances_from_embeddings(
@@ -25,12 +28,15 @@ def distances_from_embeddings(
     return distances
 
 
-def question_action(domain: str, question: str, max_tokens=150, stop_sequence=None):
+def question_action(url: str, question: str, max_tokens=150, stop_sequence=None):
     client = OpenAI()
 
-    domain = domain[8:domain.index("/", 8)]
-    df = pd.read_csv(f'processed/{domain}-embeddings.csv', index_col=0)
-    df['embeddings'] = df['embeddings'].apply(eval).apply(np.array)
+    domain = extract_domain(url)
+    output_path = Path("output")
+    df = pd.read_csv(
+        output_path / "processed" / f"{domain}-embeddings.csv", index_col=0
+    )
+    df["embeddings"] = df["embeddings"].apply(eval).apply(np.array)
 
     df.head()
 
@@ -43,12 +49,12 @@ def question_action(domain: str, question: str, max_tokens=150, stop_sequence=No
             messages=[
                 {
                     "role": "system",
-                    "content": "Answer the question based on the context below, and if the question can't be answered based on the context, say \"I don't know\"\n\n"
+                    "content": "Answer the question based on the context below, and if the question can't be answered based on the context, say \"I don't know\"\n\n",
                 },
                 {
                     "role": "user",
-                    f"content": f"Context: {context}\n\n---\n\nQuestion: {question}\nAnswer:"
-                }
+                    f"content": f"Context: {context}\n\n---\n\nQuestion: {question}\nAnswer:",
+                },
             ],
             temperature=0,
             max_tokens=max_tokens,
@@ -69,19 +75,25 @@ def create_context(client: OpenAI, question, df, max_len=1800):
     """
 
     # Get the embeddings for the question
-    q_embeddings = client.embeddings.create(input=question, model='text-embedding-ada-002').data[0].embedding
+    q_embeddings = (
+        client.embeddings.create(input=question, model="text-embedding-ada-002")
+        .data[0]
+        .embedding
+    )
 
     # Get the distances from the embeddings
-    df['distances'] = distances_from_embeddings(q_embeddings, df['embeddings'].values, distance_metric='cosine')
+    df["distances"] = distances_from_embeddings(
+        q_embeddings, df["embeddings"].values, distance_metric="cosine"
+    )
 
     returns = []
     cur_len = 0
 
     # Sort by distance and add the text to the context until the context is too long
-    for i, row in df.sort_values('distances', ascending=True).iterrows():
+    for i, row in df.sort_values("distances", ascending=True).iterrows():
 
         # Add the length of the text to the current length
-        cur_len += row['n_tokens'] + 4
+        cur_len += row["n_tokens"] + 4
 
         # If the context is too long, break
         if cur_len > max_len:

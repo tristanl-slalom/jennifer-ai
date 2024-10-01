@@ -2,19 +2,22 @@ from pathlib import Path
 
 import pandas as pd
 
+from jennifer.utilities import extract_domain
+
 
 def _remove_newlines(serie):
-    serie = serie.str.replace('\n', ' ')
-    serie = serie.str.replace('\\n', ' ')
-    serie = serie.str.replace('  ', ' ')
-    serie = serie.str.replace('  ', ' ')
+    serie = serie.str.replace("\n", " ")
+    serie = serie.str.replace("\\n", " ")
+    serie = serie.str.replace("  ", " ")
+    serie = serie.str.replace("  ", " ")
     return serie
 
 
-def process_text_action(domain: str, rebuild: bool):
-    domain = domain[8:domain.index("/", 8)]
-    text_domain_path = Path("text") / domain
-    processed_directory_path = Path("processed")
+def process_text_action(url: str, rebuild: bool):
+    domain = extract_domain(url)
+    output_path = Path("output")
+    text_domain_path = output_path / "text" / domain
+    processed_directory_path = output_path / "processed"
     processed_domain_path = processed_directory_path / f"{domain}.csv"
 
     if processed_domain_path.exists() and not rebuild:
@@ -35,19 +38,20 @@ def process_text_action(domain: str, rebuild: bool):
             # Omit the first 11 lines and the last 4 lines, then replace -, _, and #update with spaces.
             texts.append(
                 (
-                    file.name[len(domain)+2:].replace('index.html', '')
-                    .replace('.txt', '')
-                    .replace('-', ' ')
-                    .replace('_', ' ')
-                    .replace('#update', ''),
-                    text
+                    file.name[len(domain) + 2 :]
+                    .replace("index.html", "")
+                    .replace(".txt", "")
+                    .replace("-", " ")
+                    .replace("_", " ")
+                    .replace("#update", ""),
+                    text,
                 )
             )
 
     # Create a dataframe from the list of texts
-    df = pd.DataFrame(texts, columns=['fname', 'text'])
+    df = pd.DataFrame(texts, columns=["fname", "text"])
 
     # Set the text column to be the raw text with the newlines removed
-    df['text'] = df.fname + ". " + _remove_newlines(df.text)
-    df.to_csv(f"processed/{domain}.csv")
+    df["text"] = df.fname + ". " + _remove_newlines(df.text)
+    df.to_csv(processed_domain_path)
     df.head()

@@ -4,7 +4,7 @@ from urllib.parse import urlparse
 from jennifer.get_hyperlinks import get_hyperlinks
 
 
-HTTP_URL_PATTERN = r'^http[s]*://.+'
+HTTP_URL_PATTERN = r"^http[s]*://.+"
 
 
 def _clean_link(link: str, local_domain: str):
@@ -30,8 +30,10 @@ def _clean_link(link: str, local_domain: str):
 def get_domain_hyperlinks(local_domain: str, url: str):
     clean_links = set()
     for link in get_hyperlinks(url):
-        if link.startswith('frm') and url.endswith(".com/"):
+        if link.startswith("frm") and url.endswith(".com/"):
             clean_links.add(f"{url}{link}")
+        elif url.startswith("https://") and "/frm" in url:
+            clean_links.add(url)
         elif clean_link := _clean_link(link, local_domain):
             clean_links.add(clean_link)
 

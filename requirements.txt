@@ -1,8 +1,23 @@
+# a command-line utility framework I love
 typer >= 0.12.1
+
+# the openai client!
 openai >= 1.46.1
+
+# extracting text from HTML
 beautifulsoup4 >= 4.12.3
+
+# for downloading page contents for scraping purposes
 requests >= 2.32.3
+
+# for reading and writing csvs, and using dataframes
 pandas >= 2.2.3
+
+# for token creation
 tiktoken >= 0.7.0
-matplotlib >= 3.9.2
+
+# for an embeddings utility that openai removed
 scipy >= 1.14.1
+
+# formatting
+black >= 24.8.0
