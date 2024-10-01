@@ -16,7 +16,14 @@ python main.py --help
 IMPORTANT: You must have your OPENAI_API_KEY set in your environment for the
 OpenAI client to function!
 
-Once installed, you'll find a series of commands, but "ask-question" will do all the commands internally. Assuming it works on the first try, it'll try to download the relevant data and process it for the domain you select for your first question.
+Once installed, you'll find a series of commands, but "ask-question"
+will do all the commands internally. Assuming it works on the first try,
+it'll try to download the relevant data and process it for the domain
+you select for your first question.
+
+You may have to wait 5-10 minutes for that first request to gather all
+the needed data, but further requests should go quickly.
+
 ```bash
 python main.py ask-question https://www.hot-dog.org \
 "What can you tell me about the North American Meat Institute?"
