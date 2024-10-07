@@ -43,3 +43,28 @@ NAMI's members produce the majority of U.S. beef, pork, lamb, and
 poultry, as well as the equipment, ingredients, and services
 needed for high-quality products.
 ```
+
+```commandline
+python main.py vocabulary temperature
+```
+
+The vocabulary command can use generative AI to explain various terms
+of generative AI as if you were five years old.
+
+```
+Alright! Imagine you have a magical box that can make up stories!
+
+**Temperature** is like a dial you can turn up or down. When you 
+turn it up, the stories can be really wild and surprising, like a 
+rainbow unicorn flying in space! But if you turn it down, the 
+stories become more predictable, like a cat chasing a laser pointer.
+
+**Top-p** is a little different. Think of it like giving the box a 
+list of the best toys to choose from. If you pick a "top-p" of 0.8, 
+the box can only choose from the top 80% of the toys. This way, it 
+still makes fun stories but makes sure they’re not too strange and 
+still pretty cool!
+
+So, **temperature** makes the stories more crazy or safe, and **top-p** 
+helps the box choose from the best ideas!%
+```
