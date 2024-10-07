@@ -24,6 +24,15 @@ you select for your first question.
 You may have to wait 5-10 minutes for that first request to gather all
 the needed data, but further requests should go quickly.
 
+# Main Commands
+
+## Ask Question
+
+Scrapes a website and lets you ask questions against the site's 
+contents. The first question takes a long time, but follow-up 
+questions reuse the content it acquired. Ask a question of a new 
+domain and the system will download data for that instead.
+
 ```bash
 python main.py ask-question https://www.hot-dog.org \
 "What can you tell me about the North American Meat Institute?"
@@ -44,12 +53,25 @@ poultry, as well as the equipment, ingredients, and services
 needed for high-quality products.
 ```
 
-```commandline
-python main.py vocabulary temperature
-```
+## Vocabulary
 
 The vocabulary command can use generative AI to explain various terms
 of generative AI as if you were five years old.
+
+The following terms can be described:
+
+- prompt
+- role
+- content
+- context
+- completion
+- chat-completion
+- top-p
+- temperature
+
+```commandline
+python main.py vocabulary temperature
+```
 
 ```
 Alright! Imagine you have a magical box that can make up stories!
