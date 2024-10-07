@@ -26,7 +26,7 @@ the needed data, but further requests should go quickly.
 
 # Main Commands
 
-## Ask Question
+## Ask Question - Week 2
 
 Scrapes a website and lets you ask questions against the site's 
 contents. The first question takes a long time, but follow-up 
@@ -53,7 +53,7 @@ poultry, as well as the equipment, ingredients, and services
 needed for high-quality products.
 ```
 
-## Vocabulary
+## Vocabulary - Week 3
 
 The vocabulary command can use generative AI to explain various terms
 of generative AI as if you were five years old.
