@@ -21,7 +21,7 @@ def vocabulary_action(word: VocabularyWord, age: int, temperature: Optional[floa
         "I am trying to help the user understand generative AI terms",
         f"I know the user is {age} years old",
         "I want to speak in terms relevant to a person of that age",
-        "I also want to use vocabulary familiar with a person of that age",
+        "I also want to write text in a way that seems like a caricature of how a person of that age speaks",
     ]
     user_messages_per_word = {
         VocabularyWord.PROMPT: "Help me understand what a 'prompt' is",
