@@ -3,16 +3,8 @@ from pathlib import Path
 import pandas as pd
 from openai import OpenAI
 
-from jennifer.utilities import extract_domain
-
-
-def _create_embedding(client: OpenAI, input: str):
-    print(f"creating embedding: {input}")
-    return (
-        client.embeddings.create(input=input, model="text-embedding-ada-002")
-        .data[0]
-        .embedding
-    )
+from jennifer.utilities.domains import extract_domain
+from jennifer.utilities.embeddings import create_embedding
 
 
 def create_embeddings_action(url: str, rebuild: bool):
@@ -32,7 +24,7 @@ def create_embeddings_action(url: str, rebuild: bool):
 
     df = pd.read_csv(tokens_path)
     print(f"creating embeddings for {len(df)} inputs")
-    df["embeddings"] = df.text.apply(lambda x: _create_embedding(client, x))
+    df["embeddings"] = df.text.apply(lambda x: create_embedding(client, x))
 
     df.to_csv(embeddings_path)
     df.head()

@@ -1,12 +1,12 @@
 from collections import deque
+from pathlib import Path
 from shutil import rmtree
 from urllib.parse import urlparse
-from pathlib import Path
 
 import requests
 from bs4 import BeautifulSoup
 
-from jennifer.get_domain_hyperlinks import get_domain_hyperlinks
+from jennifer.utilities.hyperlinks import get_domain_hyperlinks
 
 
 def crawl_action(url: str, rebuild: bool, must_include: str):

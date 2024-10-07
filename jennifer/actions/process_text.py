@@ -2,15 +2,8 @@ from pathlib import Path
 
 import pandas as pd
 
-from jennifer.utilities import extract_domain
-
-
-def _remove_newlines(serie):
-    serie = serie.str.replace("\n", " ")
-    serie = serie.str.replace("\\n", " ")
-    serie = serie.str.replace("  ", " ")
-    serie = serie.str.replace("  ", " ")
-    return serie
+from jennifer.utilities.domains import extract_domain
+from jennifer.utilities.text import remove_newlines
 
 
 def process_text_action(url: str, rebuild: bool):
@@ -52,6 +45,6 @@ def process_text_action(url: str, rebuild: bool):
     df = pd.DataFrame(texts, columns=["fname", "text"])
 
     # Set the text column to be the raw text with the newlines removed
-    df["text"] = df.fname + ". " + _remove_newlines(df.text)
+    df["text"] = df.fname + ". " + remove_newlines(df.text)
     df.to_csv(processed_domain_path)
     df.head()

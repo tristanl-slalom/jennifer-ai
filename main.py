@@ -1,10 +1,14 @@
-import typer
+from typing import Optional
 
-from jennifer.crawl import crawl_action
-from jennifer.embeddings import create_embeddings_action
-from jennifer.process_text import process_text_action
-from jennifer.question import question_action
-from jennifer.tokenize_action import tokenize_action
+import typer
+from openai import NotGiven
+
+from jennifer.actions.vocabulary import vocabulary_action, VocabularyWord
+from jennifer.actions.crawl import crawl_action
+from jennifer.actions.embeddings import create_embeddings_action
+from jennifer.actions.process_text import process_text_action
+from jennifer.actions.question import question_action
+from jennifer.actions.tokenize import tokenize_action
 
 app = typer.Typer()
 
@@ -38,6 +42,15 @@ def ask_question(
     tokenize_action(url, rebuild)
     create_embeddings_action(url, rebuild)
     question_action(url, question)
+
+
+@app.command()
+def vocabulary(
+        word: VocabularyWord,
+        temperature: Optional[float] = None,
+        top_p: Optional[float] = None,
+):
+    vocabulary_action(word, temperature, top_p)
 
 
 # Press the green button in the gutter to run the script.
