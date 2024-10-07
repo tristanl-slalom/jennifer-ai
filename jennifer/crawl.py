@@ -30,7 +30,7 @@ def crawl_action(url: str, rebuild: bool, must_include: str):
 
     while queue:
         url = queue.pop()
-        print(url)
+        print(f"{len(queue)}: {url}")
 
         santized_url_sans_protocol = url[8:].replace("/", "__").replace(":", "--")[:64]
         with open(
