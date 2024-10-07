@@ -47,10 +47,11 @@ def ask_question(
 @app.command()
 def vocabulary(
         word: VocabularyWord,
+        user_age: int = 5,
         temperature: Optional[float] = None,
         top_p: Optional[float] = None,
 ):
-    vocabulary_action(word, temperature, top_p)
+    vocabulary_action(word, user_age, temperature, top_p)
 
 
 # Press the green button in the gutter to run the script.
