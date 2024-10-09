@@ -31,7 +31,7 @@ def process_text_action(url: str, rebuild: bool):
             # Omit the first 11 lines and the last 4 lines, then replace -, _, and #update with spaces.
             texts.append(
                 (
-                    file.name[len(domain) + 2 :]
+                    file.name[len(domain) + 2:]
                     .replace("index.html", "")
                     .replace(".txt", "")
                     .replace("-", " ")

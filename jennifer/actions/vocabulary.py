@@ -15,7 +15,9 @@ class VocabularyWord(Enum):
     TEMPERATURE = "temperature"
 
 
-def vocabulary_action(word: VocabularyWord, age: int, temperature: Optional[float], top_p: Optional[float]):
+def vocabulary_action(
+    word: VocabularyWord, age: int, temperature: Optional[float], top_p: Optional[float]
+):
     client = OpenAI()
     system_messages = [
         "I am trying to help the user understand generative AI terms",
@@ -35,15 +37,11 @@ def vocabulary_action(word: VocabularyWord, age: int, temperature: Optional[floa
     }
     selected_user_message = user_messages_per_word[word]
 
-    system_messages = [{
-        "role": "system",
-        "content": message
-    } for message in system_messages]
+    system_messages = [
+        {"role": "system", "content": message} for message in system_messages
+    ]
 
-    user_messages = [{
-        "role": "user",
-        "content": selected_user_message
-    }]
+    user_messages = [{"role": "user", "content": selected_user_message}]
 
     completion = client.chat.completions.create(
         model="gpt-4o-mini",

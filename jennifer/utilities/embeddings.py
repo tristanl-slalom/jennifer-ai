@@ -23,7 +23,6 @@ def distances_from_embeddings(
 
 
 def create_embedding(client: OpenAI, input: str):
-    print(f"creating embedding: {input}")
     return (
         client.embeddings.create(input=input, model="text-embedding-ada-002")
         .data[0]

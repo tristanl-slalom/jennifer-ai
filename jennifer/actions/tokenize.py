@@ -1,4 +1,5 @@
 from pathlib import Path
+from shutil import copy
 
 import pandas as pd
 import tiktoken
@@ -10,21 +11,30 @@ from jennifer.utilities.tokenizer import split_into_many, MAX_TOKENS
 def tokenize_action(url: str, rebuild: bool):
     domain = extract_domain(url)
 
-    output_path = Path("output")
-    processed_domain_path = output_path / "processed" / f"{domain}.csv"
-    tokens_path = output_path / "processed" / f"{domain}-tokens.csv"
-    if tokens_path.exists() and not rebuild:
-        return
+    processed_domain_path = Path("output") / "processed" / f"{domain}.csv"
 
-    if not processed_domain_path.exists():
+    return tokenize_local_action(processed_domain_path, rebuild)
+
+
+def tokenize_local_action(input_file: Path, rebuild: bool):
+    output_path = Path("output") / "processed"
+    output_file = output_path / input_file.name
+    tokens_path = output_path / f"{input_file.stem}-tokens.csv"
+    if tokens_path.exists() and not rebuild:
+        return tokens_path
+
+    if not input_file.exists():
         raise FileNotFoundError(
-            f"processed domain path for {domain} not found; run process first!"
+            f"Input file {input_file} not found, stopping early!"
         )
+
+    if input_file != output_file:
+        copy(input_file, output_file)
 
     # Load the cl100k_base tokenizer which is designed to work with the ada-002 model
     tokenizer = tiktoken.get_encoding("cl100k_base")
 
-    df = pd.read_csv(processed_domain_path, index_col=0)
+    df = pd.read_csv(output_file, index_col=0)
     df.columns = ["title", "text"]
 
     # Tokenize the text and save the number of tokens to a new column
@@ -51,3 +61,4 @@ def tokenize_action(url: str, rebuild: bool):
     df["n_tokens"] = df.text.apply(lambda x: len(tokenizer.encode(x)))
 
     df.to_csv(tokens_path)
+    return tokens_path

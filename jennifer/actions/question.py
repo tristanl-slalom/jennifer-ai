@@ -5,32 +5,27 @@ import pandas as pd
 from openai import OpenAI
 
 from jennifer.utilities.context import create_context
-from jennifer.utilities.domains import extract_domain
 
 
-def question_action(url: str, question: str, max_tokens=150, stop_sequence=None):
+def question_action(embeddings_path: Path, question: str, max_tokens=None, stop_sequence=None):
     client = OpenAI()
 
-    domain = extract_domain(url)
-    output_path = Path("output")
-    df = pd.read_csv(
-        output_path / "processed" / f"{domain}-embeddings.csv", index_col=0
-    )
+    df = pd.read_csv(embeddings_path, index_col=0)
     df["embeddings"] = df["embeddings"].apply(eval).apply(np.array)
 
     df.head()
 
-    context = create_context(client, question, df)
+    context = create_context(client, question, df, max_len=128000)
 
     try:
         # Create a chat completion using the question and context
         response = client.chat.completions.create(
-            model="gpt-3.5-turbo",
+            model="gpt-4o-mini",
             messages=[
                 {
                     "role": "system",
                     "content": "Answer the question based on the context below, and if the question "
-                               "can't be answered based on the context, say \"I don't know\"\n\n",
+                    "can't be answered based on the context, say \"I don't know\"\n\n",
                 },
                 {
                     "role": "user",

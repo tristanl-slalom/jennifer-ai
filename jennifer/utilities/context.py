@@ -8,6 +8,9 @@ def create_context(client: OpenAI, question, df, max_len=1800):
     Create a context for a question by finding the most similar context from the dataframe
     """
 
+    if max_len > 128000:
+        raise ValueError("Max length cannot be more than 128000 tokens.")
+
     # Get the embeddings for the question
     q_embeddings = (
         client.embeddings.create(input=question, model="text-embedding-ada-002")
