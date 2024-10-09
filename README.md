@@ -9,8 +9,8 @@ Clone the repo and use the following commands to get it working.
 ```bash
 python3 -m venv venv
 source venv/bin/activate
-pip install -r requirements.txt
-python main.py --help
+pip install -e .
+jennifer --help
 ```
 
 IMPORTANT: You must have your OPENAI_API_KEY set in your environment for the
