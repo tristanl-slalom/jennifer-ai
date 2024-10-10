@@ -26,6 +26,22 @@ the needed data, but further requests should go quickly.
 
 # Main Commands
 
+## Haiku - Week 1
+
+Uses the OpenAI Completion API to generate a haiku, defaulting to the
+tutorial topic of recursive programming, but you can set your own topic
+using the optional "--topic" argument.
+
+```bash
+jennifer haiku --topic "drinking coffee"
+```
+
+```bash
+Warm cup in my hands,  
+Steam rises like morning light—
+Awake, dreams take flight.
+```
+
 ## Ask Question - Week 2
 
 Scrapes a website and lets you ask questions against the site's 
@@ -34,7 +50,7 @@ questions reuse the content it acquired. Ask a question of a new
 domain and the system will download data for that instead.
 
 ```bash
-python main.py ask-question https://www.hot-dog.org \
+jennifer ask-question https://www.hot-dog.org \
 "What can you tell me about the North American Meat Institute?"
 ```
 
@@ -70,7 +86,7 @@ The following terms can be described:
 - temperature
 
 ```commandline
-python main.py vocabulary temperature
+jennifer vocabulary temperature
 ```
 
 ```
