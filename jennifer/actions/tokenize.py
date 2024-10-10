@@ -24,9 +24,7 @@ def tokenize_local_action(input_file: Path, rebuild: bool):
         return tokens_path
 
     if not input_file.exists():
-        raise FileNotFoundError(
-            f"Input file {input_file} not found, stopping early!"
-        )
+        raise FileNotFoundError(f"Input file {input_file} not found, stopping early!")
 
     if input_file != output_file:
         copy(input_file, output_file)

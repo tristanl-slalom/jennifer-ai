@@ -56,9 +56,7 @@ def ask_question(
 
 
 @app.command()
-def ask_question_local(
-    input_file: Path, question: str, rebuild: bool = False
-):
+def ask_question_local(input_file: Path, question: str, rebuild: bool = False):
     tokens_path = tokenize_local_action(input_file, rebuild)
     embeddings_path = create_embeddings_action(input_file.stem, tokens_path, rebuild)
     question_action(embeddings_path, question)

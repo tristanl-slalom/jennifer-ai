@@ -7,7 +7,9 @@ from openai import OpenAI
 from jennifer.utilities.context import create_context
 
 
-def question_action(embeddings_path: Path, question: str, max_tokens=None, stop_sequence=None):
+def question_action(
+    embeddings_path: Path, question: str, max_tokens=None, stop_sequence=None
+):
     client = OpenAI()
 
     df = pd.read_csv(embeddings_path, index_col=0)
