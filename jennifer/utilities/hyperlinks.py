@@ -1,6 +1,7 @@
 from html.parser import HTMLParser
 from re import search
 from urllib import request
+from urllib.error import HTTPError
 from urllib.parse import urlparse
 from urllib.request import Request
 
@@ -26,8 +27,7 @@ def get_hyperlinks(url):
                 return []
 
             html = response.read().decode("utf-8")
-    except Exception as e:
-        print(e)
+    except HTTPError:
         return []
 
     parser = HyperlinkParser()

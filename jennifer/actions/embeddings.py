@@ -2,6 +2,7 @@ from pathlib import Path
 
 import pandas as pd
 from openai import OpenAI
+from rich.progress import Progress
 
 from jennifer.utilities.embeddings import create_embedding
 
@@ -21,16 +22,15 @@ def create_embeddings_action(domain: str, tokens_path: Path, rebuild: bool):
 
     df = pd.read_csv(tokens_path)
     print(f"creating embeddings for {len(df)} inputs")
-    index = 0
-    df_len = len(df)
 
-    def create_embedding_local(x):
-        nonlocal index
-        print(f"{int(index/df_len*100)}%: {x}")
-        index += 1
-        return create_embedding(client, x)
+    with Progress() as progress:
+        task = progress.add_task("Creating embeddings...", total=len(df))
 
-    df["embeddings"] = df.text.apply(create_embedding_local)
+        def create_embedding_local(x):
+            progress.advance(task)
+            return create_embedding(client, x)
+
+        df["embeddings"] = df.text.apply(create_embedding_local)
 
     df.to_csv(embeddings_path)
     df.head()
