@@ -44,7 +44,7 @@ def create_embeddings(url: str, rebuild: bool = False):
 
 @app.command()
 def ask_question(
-    url: str, question: str, rebuild: bool = False, must_include: str = None
+    url: str, question: str, rebuild: bool = False, must_include: str = None, max_tokens: int = None
 ):
     domain = extract_domain(url)
 
@@ -52,7 +52,7 @@ def ask_question(
     process_text_action(url, rebuild)
     tokens_path = tokenize_action(url, rebuild)
     embeddings_path = create_embeddings_action(domain, tokens_path, rebuild)
-    question_action(embeddings_path, question)
+    question_action(embeddings_path, question, max_tokens=max_tokens)
 
 
 @app.command()

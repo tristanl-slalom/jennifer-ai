@@ -17,7 +17,7 @@ def question_action(
 
     df.head()
 
-    context = create_context(client, question, df, max_len=128000)
+    context = create_context(client, question, df, max_len=100000)
 
     try:
         # Create a chat completion using the question and context
