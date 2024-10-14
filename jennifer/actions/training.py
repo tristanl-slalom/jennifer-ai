@@ -121,60 +121,60 @@ def training_action(existing_job: Optional[str], test_message: Optional[str]):
             print("Aborting since the job did not complete successfully")
             exit(1)
 
-        test = pd.read_json(output_path, lines=True)
-        print(test.head())
+    test = pd.read_json(output_path, lines=True)
+    print(test.head())
 
-        ft_model = fine_tune_results.fine_tuned_model
+    ft_model = fine_tune_results.fine_tuned_model
 
-        # note that this calls the legacy completions api - https://platform.openai.com/docs/api-reference/completions
-        test_baseball_content = {"role": "user", "content": test['messages'][0][1]['content'] + '\n\n###\n\n'}
+    # note that this calls the legacy completions api - https://platform.openai.com/docs/api-reference/completions
+    test_baseball_content = {"role": "user", "content": test['messages'][0][1]['content'] + '\n\n###\n\n'}
+    res = client.chat.completions.create(
+        model=ft_model,
+        messages=[context_message_dict, test_baseball_content],
+        max_tokens=10,
+        temperature=0
+    )
+    print(res.choices[0].message.content)
+
+    res = client.chat.completions.create(
+        model=ft_model,
+        messages=[context_message_dict, test_baseball_content],
+        max_tokens=10,
+        temperature=0,
+        logprobs=True,
+    )
+    print(res.choices[0].logprobs.content[0].logprob)
+
+    if not test_message:
+        sample_hockey_tweet = """
+        Thank you to the @Canes and all you amazing Caniacs that have been so supportive!
+        You guys are some of the best fans in the NHL without a doubt! Really excited to
+        start this new chapter in my career with the @DetroitRedWings!!
+        """
         res = client.chat.completions.create(
             model=ft_model,
-            messages=[context_message_dict, test_baseball_content],
-            max_tokens=10,
-            temperature=0
-        )
-        print(res.choices[0].message.content)
-
-        res = client.chat.completions.create(
-            model=ft_model,
-            messages=[context_message_dict, test_baseball_content],
+            messages=[context_message_dict, {"role": "user", "content": sample_hockey_tweet + '\n\n###\n\n'}],
             max_tokens=10,
             temperature=0,
-            logprobs=True,
         )
-        print(res.choices[0].logprobs.content[0].logprob)
+        print(f"Sample hockey tweet determined to be {res.choices[0].message.content} related")
 
-        if not test_message:
-            sample_hockey_tweet = """
-            Thank you to the @Canes and all you amazing Caniacs that have been so supportive!
-            You guys are some of the best fans in the NHL without a doubt! Really excited to
-            start this new chapter in my career with the @DetroitRedWings!!
-            """
-            res = client.chat.completions.create(
-                model=ft_model,
-                messages=[context_message_dict, {"role": "user", "content": sample_hockey_tweet + '\n\n###\n\n'}],
-                max_tokens=10,
-                temperature=0,
-            )
-            print(f"Sample hockey tweet determined to be {res.choices[0].message.content} related")
-
-            sample_baseball_tweet = """
-            BREAKING: The Tampa Bay Rays are finalizing a deal to acquire slugger Nelson Cruz 
-            from the Minnesota Twins, sources tell ESPN.
-            """
-            res = client.chat.completions.create(
-                model=ft_model,
-                messages=[context_message_dict, {"role": "user", "content": sample_baseball_tweet + '\n\n###\n\n'}],
-                max_tokens=10,
-                temperature=0,
-            )
-            print(f"Sample baseball tweet determined to be {res.choices[0].message.content} related")
-        else:
-            res = client.chat.completions.create(
-                model=ft_model,
-                messages=[context_message_dict, {"role": "user", "content": test_message + '\n\n###\n\n'}],
-                max_tokens=10,
-                temperature=0,
-            )
-            print(f"Provided test message determined to be {res.choices[0].message.content} related")
+        sample_baseball_tweet = """
+        BREAKING: The Tampa Bay Rays are finalizing a deal to acquire slugger Nelson Cruz 
+        from the Minnesota Twins, sources tell ESPN.
+        """
+        res = client.chat.completions.create(
+            model=ft_model,
+            messages=[context_message_dict, {"role": "user", "content": sample_baseball_tweet + '\n\n###\n\n'}],
+            max_tokens=10,
+            temperature=0,
+        )
+        print(f"Sample baseball tweet determined to be {res.choices[0].message.content} related")
+    else:
+        res = client.chat.completions.create(
+            model=ft_model,
+            messages=[context_message_dict, {"role": "user", "content": test_message + '\n\n###\n\n'}],
+            max_tokens=10,
+            temperature=0,
+        )
+        print(f"Provided test message determined to be {res.choices[0].message.content} related")
