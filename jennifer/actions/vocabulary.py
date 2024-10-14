@@ -13,6 +13,11 @@ class VocabularyWord(Enum):
     CHAT_COMPLETION = "chat-completion"
     TOP_P = "top-p"
     TEMPERATURE = "temperature"
+    INPUT = "input"
+    PREDEFINED_CLASSES = "predefined-classes"
+    TEMPLATE = "template"
+    CONCRETE_EXAMPLES = "concrete-examples"
+    FINE_TUNING = "fine-tuning"
 
 
 def vocabulary_action(
@@ -38,6 +43,11 @@ def vocabulary_action(
         VocabularyWord.CHAT_COMPLETION: "Help me understand what a 'chat completion' is, beyond a regular 'completion'",
         VocabularyWord.TOP_P: "Help me understand what 'top-p' is in comparison to 'temperature'",
         VocabularyWord.TEMPERATURE: "Help me understand what 'temperature' is in comparison to 'top-p'",
+        VocabularyWord.INPUT: "Define 'input' in the context of AI model fine-tuning",
+        VocabularyWord.PREDEFINED_CLASSES: "Define 'predefined classes' as it pertains to AI model fine-tuning",
+        VocabularyWord.TEMPLATE: "Define templates in the context of AI model fine-tuning",
+        VocabularyWord.CONCRETE_EXAMPLES: "Define 'concrete examples' as it pertains to AI model fine-tuning",
+        VocabularyWord.FINE_TUNING: "Define what it means to fine-tune an AI model",
     }
     selected_user_message = user_messages_per_word[word]
 

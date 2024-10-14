@@ -106,3 +106,45 @@ still pretty cool!
 So, **temperature** makes the stories more crazy or safe, and **top-p** 
 helps the box choose from the best ideas!%
 ```
+
+## Baseball vs Hockey - Week 4
+
+The goal for this week was to use sample data to train a model with
+specific data, and then leverage that model with the trained data.
+The problem is, the Jupyter notebook relied on old APIs and base
+models that were retiring in just a few days (e.g. 'babbage').
+
+> New fine-tuning training runs on babbage-002 and davinci-002 will 
+> no longer be supported starting October 28, 2024.
+> -- [Open AI Fine-Tuning Guide](https://platform.openai.com/docs/guides/fine-tuning/which-models-can-be-fine-tuned)
+
+I've taken from the original materials a pretty faithful translation
+but the project should try to create a new model from the data, wait
+for its successful completion, do some analysis on the results, and
+then attempt to use the model.
+
+PLEASE NOTE: Creating a model can take a long time, like 30 minutes.
+A happy progress spinner will let you know it's still going, but it
+cannot gauge progress.
+
+```bash
+# should create a model and test it with some sample data.
+jennifer training
+```
+
+```bash
+# should use the model from an existing successful job instead.
+jennifer training --existing-job ftjob-se4KpuhQ7rXOf5YcCUVOVNzp
+```
+
+```bash
+# should use the model from an existing successful job and
+# use the given test message instead.
+jennifer training --existing-job ftjob-se4KpuhQ7rXOf5YcCUVOVNzp\
+ --test-message "I love how the players smack pucks with their big sticks"
+
+```
+```
+Provided test message determined to be hockey related
+```
+

@@ -24,3 +24,9 @@ scipy >= 1.14.1
 
 # formatting
 black >= 24.8.0
+
+# Datasets for training example
+scikit-learn >= 1.5.2
+
+# Pydantic for sweet, sweet serialization
+pydantic >= 2.9.2

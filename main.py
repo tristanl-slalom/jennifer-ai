@@ -10,6 +10,7 @@ from jennifer.actions.embeddings import create_embeddings_action
 from jennifer.actions.process_text import process_text_action
 from jennifer.actions.question import question_action
 from jennifer.actions.tokenize import tokenize_action, tokenize_local_action
+from jennifer.actions.training import training_action
 from jennifer.utilities.domains import extract_domain
 
 app = typer.Typer()
@@ -74,6 +75,11 @@ def vocabulary(
     top_p: Optional[float] = None,
 ):
     vocabulary_action(word, user_age, temperature, top_p)
+
+
+@app.command()
+def training(existing_job: str = None, test_message: str = None):
+    training_action(existing_job, test_message)
 
 
 # Press the green button in the gutter to run the script.
