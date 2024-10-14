@@ -44,7 +44,11 @@ def create_embeddings(url: str, rebuild: bool = False):
 
 @app.command()
 def ask_question(
-    url: str, question: str, rebuild: bool = False, must_include: str = None, max_tokens: int = None
+    url: str,
+    question: str,
+    rebuild: bool = False,
+    must_include: str = None,
+    max_tokens: int = None,
 ):
     domain = extract_domain(url)
 

@@ -47,4 +47,3 @@ def process_text_action(url: str, rebuild: bool):
     # Set the text column to be the raw text with the newlines removed
     df["text"] = df.fname + ". " + remove_newlines(df.text)
     df.to_csv(processed_domain_path)
-    df.head()

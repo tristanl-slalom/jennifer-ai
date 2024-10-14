@@ -1,6 +1,5 @@
 from typing import List
 
-from openai import OpenAI
 from scipy import spatial
 
 
@@ -9,6 +8,17 @@ def distances_from_embeddings(
     embeddings: List[List[float]],
     distance_metric="cosine",
 ) -> List[List]:
+    """
+    Originally this was a method in OpenAI's utilities module, but they seemed
+    to have removed it. I found this online; it seems to do the trick.
+
+    So far we only seem to use cosine, and this function could be simplified to
+    just do that, but I keep the original version I found here just in case.
+    Basically, seems to take a list of floats and a bunch of lists of floats and
+    calculates the cosine of each entry between them.
+
+    Math stuff, I dunno. Fancy!
+    """
     distance_metrics = {
         "cosine": spatial.distance.cosine,
         "L1": spatial.distance.cityblock,
@@ -20,11 +30,3 @@ def distances_from_embeddings(
         for embedding in embeddings
     ]
     return distances
-
-
-def create_embedding(client: OpenAI, input: str):
-    return (
-        client.embeddings.create(input=input, model="text-embedding-ada-002")
-        .data[0]
-        .embedding
-    )

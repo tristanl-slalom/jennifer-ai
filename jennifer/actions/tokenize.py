@@ -9,6 +9,10 @@ from jennifer.utilities.tokenizer import split_into_many, MAX_TOKENS
 
 
 def tokenize_action(url: str, rebuild: bool):
+    """
+    This all seems to take the input text from each row and count the number of tokens
+    and splitting long lines into multiple rows.
+    """
     domain = extract_domain(url)
 
     processed_domain_path = Path("output") / "processed" / f"{domain}.csv"
@@ -17,6 +21,10 @@ def tokenize_action(url: str, rebuild: bool):
 
 
 def tokenize_local_action(input_file: Path, rebuild: bool):
+    """
+    This all seems to take the input text from each row and count the number of tokens
+    and splitting long lines into multiple rows.
+    """
     output_path = Path("output") / "processed"
     output_file = output_path / input_file.name
     tokens_path = output_path / f"{input_file.stem}-tokens.csv"
@@ -42,7 +50,6 @@ def tokenize_local_action(input_file: Path, rebuild: bool):
 
     # Loop through the dataframe
     for row in df.iterrows():
-
         # If the text is None, go to the next row
         if row[1]["text"] is None:
             continue
@@ -57,6 +64,5 @@ def tokenize_local_action(input_file: Path, rebuild: bool):
 
     df = pd.DataFrame(shortened, columns=["text"])
     df["n_tokens"] = df.text.apply(lambda x: len(tokenizer.encode(x)))
-
     df.to_csv(tokens_path)
     return tokens_path

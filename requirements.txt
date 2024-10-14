@@ -1,6 +1,9 @@
 # a command-line utility framework I love
 typer >= 0.12.1
 
+# a CLI formatter supporting typer. I use it for progress bars!
+rich >= 13.9.2
+
 # the openai client!
 openai >= 1.46.1
 

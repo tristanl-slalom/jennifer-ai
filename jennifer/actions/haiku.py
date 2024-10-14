@@ -2,6 +2,9 @@ from openai import OpenAI
 
 
 def haiku_action(topic="recursion in programming"):
+    """
+    Generate a haiku with the provided topic.
+    """
     client = OpenAI()
 
     completion = client.chat.completions.create(
