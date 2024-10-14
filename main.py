@@ -78,8 +78,8 @@ def vocabulary(
 
 
 @app.command()
-def training(existing_job: str = None, test_message: str = None):
-    training_action(existing_job, test_message)
+def training(existing_job: str = None, test_message: str = None, rebuild: bool = False):
+    training_action(existing_job, test_message, rebuild)
 
 
 # Press the green button in the gutter to run the script.
