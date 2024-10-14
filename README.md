@@ -4,22 +4,14 @@ A command line utility in Python against the latest versions of libraries and pa
 
 ## Upgrade to python 3.10.0 or later
 ```bash
-# Install pyenv if not already installed
-curl https://pyenv.run | bash
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
-# Add pyenv to your shell
-export PATH="$HOME/.pyenv/bin:$PATH"
-eval "$(pyenv init --path)"
-eval "$(pyenv init -)"
+brew update
 
-# Restart your shell
-exec "$SHELL"
+brew install python@3.10
 
-# Install Python 3.10 using pyenv
-pyenv install 3.10.0
-
-# Set Python 3.10 as the global version
-pyenv global 3.10.0
+echo 'export PATH="/usr/local/opt/python@3.10/bin:$PATH"' >> ~/.zshrc
+echo 'alias python="python3.10"' >> ~/.zshrc
 ```
 
 ## Install and run
@@ -27,7 +19,8 @@ pyenv global 3.10.0
 Clone the repo and use the following commands to get it working.
 
 ```bash
-python3 -m venv venv
+source ~/.zshrc
+python -m venv venv
 source venv/bin/activate
 pip install -e .
 jennifer --help
