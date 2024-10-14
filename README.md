@@ -2,6 +2,26 @@
 
 A command line utility in Python against the latest versions of libraries and packages, as of 2024-10-01.
 
+## Upgrade to python 3.10.0 or later
+```bash
+# Install pyenv if not already installed
+curl https://pyenv.run | bash
+
+# Add pyenv to your shell
+export PATH="$HOME/.pyenv/bin:$PATH"
+eval "$(pyenv init --path)"
+eval "$(pyenv init -)"
+
+# Restart your shell
+exec "$SHELL"
+
+# Install Python 3.10 using pyenv
+pyenv install 3.10.0
+
+# Set Python 3.10 as the global version
+pyenv global 3.10.0
+```
+
 ## Install and run
 
 Clone the repo and use the following commands to get it working.
