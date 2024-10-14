@@ -4,5 +4,6 @@ text/
 .DS_Store
 .idea/
 *.pyc
+.python-version
 output/
 jennifer.egg-info/
