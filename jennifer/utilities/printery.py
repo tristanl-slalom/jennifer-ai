@@ -10,12 +10,18 @@ def print_model_id(fine_tune_results: FineTuningJob):
     print(f"Fine-tuned Model ID: '{ft_model}'")
 
 
-def print_fine_tuning_results(results: DataFrame):
+def print_fine_tuning_results(results: DataFrame, verbose: bool):
+    if not verbose:
+        return
+
     last_result = results[results["train_accuracy"].notnull()].tail(1)
     print(f"{last_result}")
 
 
-def print_sports_statistics(sports_dataset: Bunch):
+def print_sports_statistics(sports_dataset: Bunch, verbose: bool):
+    if not verbose:
+        return
+
     len_all, len_baseball, len_hockey = (
         len(sports_dataset.data),
         len([e for e in sports_dataset.target if e == 0]),

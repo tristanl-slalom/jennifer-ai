@@ -33,7 +33,9 @@ start this new chapter in my career with the @DetroitRedWings!!
 
 CONTEXT_MESSAGE = {
     "role": "system",
-    "content": "This is a functional chatbot that figures out if a given message is related to baseball or hockey",
+    "content": "This is a functional chatbot that figures out if a given message "
+               "is related to baseball or hockey. Only print 'hockey', 'baseball' or "
+               "'not'",
 }
 
 
@@ -58,7 +60,10 @@ class TrainingMetadata(BaseModel):
 
 
 def training_action(
-    existing_job: Optional[str], test_message: Optional[str], rebuild: bool
+    existing_job: Optional[str],
+    test_message: Optional[str],
+    rebuild: bool,
+    verbose: bool,
 ):
     """
     Week 4 course on model training from the jupyter notebook at
@@ -68,20 +73,20 @@ def training_action(
     """
 
     # Gather the sports dataset and explore it.
-    sports_dataset = _explore_data()
+    sports_dataset = _explore_data(verbose)
 
     # Prepare the training data for our model.
     paths = _prepare_data(sports_dataset)
 
     # Fine-tune the base model with our training data.
     client = OpenAI()
-    fine_tune_results = _fine_tune(client, existing_job, paths, rebuild)
+    fine_tune_results = _fine_tune(client, existing_job, paths, rebuild, verbose)
 
     # Use the fine-tuned model from the job with a test string
     _use_model(client, fine_tune_results.model, test_message)
 
 
-def _explore_data() -> Bunch:
+def _explore_data(verbose: bool) -> Bunch:
     """
     The fetch_20newsgroups function in the sklearn datasets package is used to load the
     20 newsgroups dataset, which is a collection of approximately 20,000 newsgroup documents,
@@ -94,7 +99,7 @@ def _explore_data() -> Bunch:
         subset="train", shuffle=True, random_state=42, categories=categories
     )
 
-    print_sports_statistics(sports_dataset)
+    print_sports_statistics(sports_dataset, verbose)
     return sports_dataset
 
 
@@ -158,7 +163,11 @@ def _prepare_data(sports_dataset: Bunch) -> TrainingMetadataPaths:
 
 
 def _fine_tune(
-    client: OpenAI, existing_job: str, paths: TrainingMetadataPaths, rebuild: bool
+    client: OpenAI,
+    existing_job: str,
+    paths: TrainingMetadataPaths,
+    rebuild: bool,
+    verbose: bool,
 ) -> FineTuningJob:
     """
     Using the training data we prepared in the previous step, kick off a
@@ -194,7 +203,7 @@ def _fine_tune(
 
     # Examine how our job did.
     results = gather_fine_tune_results(client, fine_tune_results, paths)
-    print_fine_tuning_results(results)
+    print_fine_tuning_results(results, verbose)
 
     # Show off our swanky new model.
     print_model_id(fine_tune_results)
