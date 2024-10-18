@@ -53,7 +53,7 @@ def crawl_action(url: str, rebuild: bool, must_include: str):
             progress.update(task, total=len(seen), completed=len(seen) - len(queue))
 
             # We need a file unique enough to reflect each page we're scraping.
-            sanitized_url = url[8:].replace("/", "__").replace(":", "--")[:64]
+            sanitized_url = url[8:].replace("/", "__").replace("?", "__").replace(":", "--")[:64]
             with open(
                 text_domain_dir / f"{sanitized_url}.txt", "w", encoding="utf-8"
             ) as f:
