@@ -1,4 +1,5 @@
 from html.parser import HTMLParser
+from http.client import InvalidURL
 from re import search
 from typing import Set, Optional
 from urllib import request
@@ -44,7 +45,8 @@ def _read_page_for_hyperlinks(url: str) -> Set[str]:
             return parser.hyperlinks
     except HTTPError:
         return set()
-
+    except InvalidURL:
+        return set()
 
 def get_domain_hyperlinks(local_domain: str, url: str) -> Set[str]:
     """
