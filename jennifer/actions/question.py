@@ -1,16 +1,15 @@
-from pathlib import Path
-
 import numpy as np
 import pandas as pd
 from openai import OpenAI
 
+from jennifer.actions.embeddings import EmbeddingsMetadata
 from jennifer.utilities.context import create_context
 
 
-def question_action(embeddings_path: Path, question: str, max_tokens=None, stop_sequence=None):
+def question_action(embeddings_data: EmbeddingsMetadata, question: str, max_tokens=None, stop_sequence=None):
     client = OpenAI()
 
-    df = pd.read_csv(embeddings_path, index_col=0)
+    df = pd.read_csv(embeddings_data.embeddings_path, index_col=0)
     df["embeddings"] = df["embeddings"].apply(eval).apply(np.array)
 
     df.head()

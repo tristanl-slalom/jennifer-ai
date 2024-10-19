@@ -1,18 +1,16 @@
-from pathlib import Path
 from typing import Optional
 
 import typer
 
 from jennifer.actions.haiku import haiku_action
 from jennifer.actions.vocabulary import vocabulary_action, VocabularyWord
-from jennifer.actions.crawl import crawl_action
+from jennifer.actions.crawl import crawl_action, crawl_metadata_from_url
 from jennifer.actions.embeddings import create_embeddings_action
-from jennifer.actions.process_text import process_text_action
+from jennifer.actions.process_text import process_text_action, process_text_metadata_from_url
 from jennifer.actions.question import question_action
-from jennifer.actions.tokenize import tokenize_action
+from jennifer.actions.tokenize import tokenize_action, tokenize_metadata_from_url
 from jennifer.actions.training import training_action
 from jennifer.utilities.cli import argument, option
-from jennifer.utilities.domains import extract_domain
 
 app = typer.Typer()
 
@@ -63,7 +61,8 @@ def process_text(
     Processes the raw data acquired from the provided URL via the crawl action and
     turns it into a single CSV.
     """
-    process_text_action(url, rebuild)
+    crawl_metadata = crawl_metadata_from_url(url)
+    process_text_action(crawl_metadata, rebuild)
 
 
 @app.command()
@@ -75,7 +74,8 @@ def tokenize(
     For the given URL, Processes the text CSV we got from the `process-text` action
     into a modified CSV that contains the text and number of tokens per line.
     """
-    tokenize_action(url, rebuild)
+    process_text_metadata = process_text_metadata_from_url(url)
+    tokenize_action(process_text_metadata, rebuild)
 
 
 @app.command()
@@ -89,9 +89,8 @@ def create_embeddings(
     embeddings.
     """
 
-    domain = extract_domain(url)
-    tokens_path = Path("output") / "processed" / f"{domain}-tokens.csv"
-    create_embeddings_action(domain, tokens_path, rebuild)
+    tokenize_metadata = tokenize_metadata_from_url(url)
+    create_embeddings_action(tokenize_metadata, rebuild)
 
 
 @app.command()
@@ -106,13 +105,11 @@ def ask_question(
     Combine all the inputs and outputs of `crawl`, `process-text`, `tokenize`,
     and `create-embeddings` and then using the embeddings to ask a question.
     """
-    domain = extract_domain(url)
-
-    crawl_action(url, rebuild, must_include)
-    process_text_action(url, rebuild)
-    tokens_path = tokenize_action(url, rebuild)
-    embeddings_path = create_embeddings_action(domain, tokens_path, rebuild)
-    question_action(embeddings_path, question, max_tokens=max_tokens)
+    crawl_data = crawl_action(url, rebuild, must_include)
+    text_data = process_text_action(crawl_data, rebuild)
+    tokens_data = tokenize_action(text_data, rebuild)
+    embeddings_data = create_embeddings_action(tokens_data, rebuild)
+    question_action(embeddings_data, question, max_tokens=max_tokens)
 
 
 @app.command()

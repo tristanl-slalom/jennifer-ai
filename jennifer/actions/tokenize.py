@@ -1,46 +1,52 @@
 from pathlib import Path
-from shutil import copy
 
 import pandas as pd
 import tiktoken
 
-from jennifer.utilities.domains import extract_domain
+from jennifer.actions.process_text import ProcessTextMetadata, process_text_metadata_from_url
 from jennifer.utilities.tokenizer import split_into_many, MAX_TOKENS
 
 
-def tokenize_action(url: str, rebuild: bool):
+class TokenizeMetadata(ProcessTextMetadata):
+    tokens_path: Path
+
+
+def tokenize_metadata_from_process_text(tokens_path: Path, process_text_metadata: ProcessTextMetadata):
+    return TokenizeMetadata(
+        tokens_path=tokens_path,
+        processed_directory_path=process_text_metadata.processed_directory_path,
+        processed_domain_path=process_text_metadata.processed_domain_path,
+        local_domain=process_text_metadata.local_domain,
+        output_path=process_text_metadata.output_path,
+        text_domain_dir=process_text_metadata.text_domain_dir,
+    )
+
+
+def tokenize_metadata_from_url(url: str):
+    process_text_metadata = process_text_metadata_from_url(url)
+    tokens_path = process_text_metadata.output_path / f"{process_text_metadata.processed_domain_path.stem}-tokens.csv"
+    return tokenize_metadata_from_process_text(tokens_path, process_text_metadata)
+
+
+def tokenize_action(process_text_metadata: ProcessTextMetadata, rebuild: bool) -> TokenizeMetadata:
     """
     This all seems to take the input text from each row and count the number of tokens
     and splitting long lines into multiple rows.
     """
-    domain = extract_domain(url)
+    input_file = process_text_metadata.processed_domain_path
+    tokens_path = process_text_metadata.processed_directory_path / f"{input_file.stem}-tokens.csv"
+    metadata = tokenize_metadata_from_process_text(tokens_path, process_text_metadata)
 
-    processed_domain_path = Path("output") / "processed" / f"{domain}.csv"
-
-    return tokenize_local_action(processed_domain_path, rebuild)
-
-
-def tokenize_local_action(input_file: Path, rebuild: bool):
-    """
-    This all seems to take the input text from each row and count the number of tokens
-    and splitting long lines into multiple rows.
-    """
-    output_path = Path("output") / "processed"
-    output_file = output_path / input_file.name
-    tokens_path = output_path / f"{input_file.stem}-tokens.csv"
     if tokens_path.exists() and not rebuild:
-        return tokens_path
+        return metadata
 
     if not input_file.exists():
         raise FileNotFoundError(f"Input file {input_file} not found, stopping early!")
 
-    if input_file != output_file:
-        copy(input_file, output_file)
-
     # Load the cl100k_base tokenizer which is designed to work with the ada-002 model
     tokenizer = tiktoken.get_encoding("cl100k_base")
 
-    df = pd.read_csv(output_file, index_col=0)
+    df = pd.read_csv(input_file, index_col=0)
     df.columns = ["title", "text"]
 
     # Tokenize the text and save the number of tokens to a new column
@@ -65,4 +71,4 @@ def tokenize_local_action(input_file: Path, rebuild: bool):
     df = pd.DataFrame(shortened, columns=["text"])
     df["n_tokens"] = df.text.apply(lambda x: len(tokenizer.encode(x)))
     df.to_csv(tokens_path)
-    return tokens_path
+    return metadata

@@ -2,19 +2,41 @@ from pathlib import Path
 
 import pandas as pd
 
-from jennifer.utilities.domains import extract_domain
+from jennifer.actions.crawl import CrawlMetadata, crawl_metadata_from_url
 from jennifer.utilities.text import remove_newlines
 
 
-def process_text_action(url: str, rebuild: bool):
-    domain = extract_domain(url)
-    output_path = Path("output")
-    text_domain_path = output_path / "text" / domain
-    processed_directory_path = output_path / "processed"
-    processed_domain_path = processed_directory_path / f"{domain}.csv"
+class ProcessTextMetadata(CrawlMetadata):
+    processed_directory_path: Path
+    processed_domain_path: Path
+
+
+def process_text_metadata_from_crawl(
+    processed_directory_path: Path, processed_domain_path: Path, crawl_metadata: CrawlMetadata
+):
+    return ProcessTextMetadata(
+        processed_directory_path=processed_directory_path,
+        processed_domain_path=processed_domain_path,
+        local_domain=crawl_metadata.local_domain,
+        output_path=crawl_metadata.output_path,
+        text_domain_dir=crawl_metadata.text_domain_dir,
+    )
+
+
+def process_text_metadata_from_url(url: str):
+    crawl_metadata = crawl_metadata_from_url(url)
+    processed_directory_path = crawl_metadata.output_path / "processed"
+    processed_domain_path = processed_directory_path / f"{crawl_metadata.local_domain}.csv"
+    return ProcessTextMetadata.from_crawl(processed_directory_path, processed_domain_path, crawl_metadata)
+
+
+def process_text_action(crawl_metadata: CrawlMetadata, rebuild: bool) -> ProcessTextMetadata:
+    processed_directory_path = crawl_metadata.output_path / "processed"
+    processed_domain_path = processed_directory_path / f"{crawl_metadata.local_domain}.csv"
+    metadata = process_text_metadata_from_crawl(processed_directory_path, processed_domain_path, crawl_metadata)
 
     if processed_domain_path.exists() and not rebuild:
-        return
+        return metadata
 
     processed_directory_path.mkdir(parents=True, exist_ok=True)
 
@@ -22,8 +44,7 @@ def process_text_action(url: str, rebuild: bool):
     texts = []
 
     # Get all the text files in the text directory
-    for file in text_domain_path.iterdir():
-
+    for file in crawl_metadata.text_domain_dir.iterdir():
         # Open the file and read the text
         with open(file, "r", encoding="UTF-8") as f:
             text = f.read()
@@ -31,7 +52,7 @@ def process_text_action(url: str, rebuild: bool):
             # Omit the first 11 lines and the last 4 lines, then replace -, _, and #update with spaces.
             texts.append(
                 (
-                    file.name[len(domain) + 2 :]
+                    file.name[len(crawl_metadata.local_domain) + 2 :]
                     .replace("index.html", "")
                     .replace(".txt", "")
                     .replace("-", " ")
@@ -47,3 +68,4 @@ def process_text_action(url: str, rebuild: bool):
     # Set the text column to be the raw text with the newlines removed
     df["text"] = df.fname + ". " + remove_newlines(df.text)
     df.to_csv(processed_domain_path)
+    return metadata
