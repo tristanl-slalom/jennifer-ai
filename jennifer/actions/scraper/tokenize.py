@@ -3,7 +3,7 @@ from pathlib import Path
 import pandas as pd
 import tiktoken
 
-from jennifer.actions.process_text import ProcessTextMetadata, process_text_metadata_from_url
+from jennifer.actions.scraper.process_text import ProcessTextMetadata, process_text_metadata_from_url
 from jennifer.utilities.tokenizer import split_into_many, MAX_TOKENS
 
 

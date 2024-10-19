@@ -2,7 +2,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from jennifer.actions.crawl import CrawlMetadata, crawl_metadata_from_url
+from jennifer.actions.scraper.crawl import CrawlMetadata, crawl_metadata_from_url
 from jennifer.utilities.text import remove_newlines
 
 

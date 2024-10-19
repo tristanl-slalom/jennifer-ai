@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 from openai import OpenAI
 
-from jennifer.actions.embeddings import EmbeddingsMetadata
+from jennifer.actions.scraper.embeddings import EmbeddingsMetadata
 from jennifer.utilities.context import create_context
 
 

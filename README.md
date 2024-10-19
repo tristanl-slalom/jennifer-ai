@@ -8,10 +8,10 @@ A command line utility in Python against the latest versions of libraries and pa
 
 brew update
 
-brew install python@3.10
+brew install python@3.12
 
-echo 'export PATH="/usr/local/opt/python@3.10/bin:$PATH"' >> ~/.zshrc
-echo 'alias python="python3.10"' >> ~/.zshrc
+echo 'export PATH="/usr/local/opt/python@3.12/bin:$PATH"' >> ~/.zshrc
+echo 'alias python="python3.12"' >> ~/.zshrc
 ```
 
 ## Install and run
