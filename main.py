@@ -40,7 +40,7 @@ def haiku(
     haiku_action(topic)
 
 
-@app.command()
+@app.command(hidden=True)
 def crawl(
     url: argument(str, "The URL we're scraping and saving raw text files for"),
     rebuild: option(bool, "Clear the cache for the URL and rebuild it") = False,
@@ -52,7 +52,7 @@ def crawl(
     crawl_action(url, rebuild, must_include)
 
 
-@app.command()
+@app.command(hidden=True)
 def process_text(
     url: argument(str, "The URL to use to search for existing text files and create a text CSV"),
     rebuild: option(bool, "Clear the cache for the URL and rebuild it") = False,
@@ -65,7 +65,7 @@ def process_text(
     process_text_action(crawl_metadata, rebuild)
 
 
-@app.command()
+@app.command(hidden=True)
 def tokenize(
     url: argument(str, "The URL to use to search for existing text CSV and create a text CSV with token count"),
     rebuild: option(bool, "If set, clears all cache related to the provided URL") = False,
@@ -78,7 +78,7 @@ def tokenize(
     tokenize_action(process_text_metadata, rebuild)
 
 
-@app.command()
+@app.command(hidden=True)
 def create_embeddings(
     url: argument(str, "The URL to use to look for existing tokens and create embeddings"),
     rebuild: option(bool, "If set, clears all cache related to the provided URL") = False,
@@ -102,8 +102,8 @@ def ask_question(
     max_tokens: option(int, "The maximum number of tokens for the response") = None,
 ):
     """
-    Combine all the inputs and outputs of `crawl`, `process-text`, `tokenize`,
-    and `create-embeddings` and then using the embeddings to ask a question.
+    Crawls and scrapes a given URL, processes the data into embeddings and asks a question
+    of the embedding data.
     """
     crawl_data = crawl_action(url, rebuild, must_include)
     text_data = process_text_action(crawl_data, rebuild)
@@ -127,13 +127,14 @@ def vocabulary(
 
 @app.command()
 def training(
-    existing_job: option(Optional[str], "The ID of the existing training job to refer to") = None,
+    existing_job: option(Optional[str], "A training job ID, defaulting to a previous job run if available") = None,
     test_message: option(Optional[str], "A test message to use against the trained model") = None,
-    rebuild: option(bool, "If set, re-runs the training job. Expensive!") = False,
+    rebuild: option(bool, "If set, re-runs the training job even if one is remembered. Expensive!") = False,
     verbose: option(bool, "If set, enables verbose output") = False,
 ):
     """
-    Start or reuse a training job based on the given parameters.
+    Start or reuse a 'baseball vs hockey' training job based on the given parameters and tests it
+    with a message.
     """
     training_action(existing_job, test_message, rebuild, verbose)
 
