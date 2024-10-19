@@ -13,16 +13,10 @@ def create_context(client: OpenAI, question: str, df: DataFrame, max_len=1800):
         raise ValueError("Max length cannot be more than 128000 tokens.")
 
     # Get the embeddings for the question
-    q_embeddings = (
-        client.embeddings.create(input=question, model="text-embedding-ada-002")
-        .data[0]
-        .embedding
-    )
+    q_embeddings = client.embeddings.create(input=question, model="text-embedding-ada-002").data[0].embedding
 
     # Get the distances from the embeddings
-    df["distances"] = distances_from_embeddings(
-        q_embeddings, df["embeddings"].values, distance_metric="cosine"
-    )
+    df["distances"] = distances_from_embeddings(q_embeddings, df["embeddings"].values, distance_metric="cosine")
 
     returns = []
     cur_len = 0

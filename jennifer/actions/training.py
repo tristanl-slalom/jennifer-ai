@@ -34,8 +34,8 @@ start this new chapter in my career with the @DetroitRedWings!!
 CONTEXT_MESSAGE = {
     "role": "system",
     "content": "This is a functional chatbot that figures out if a given message "
-               "is related to baseball or hockey. Only print 'hockey', 'baseball' or "
-               "'not'",
+    "is related to baseball or hockey. Only print 'hockey', 'baseball' or "
+    "'not'",
 }
 
 
@@ -95,9 +95,7 @@ def _explore_data(verbose: bool) -> Bunch:
     """
 
     categories = ["rec.sport.baseball", "rec.sport.hockey"]
-    sports_dataset = fetch_20newsgroups(
-        subset="train", shuffle=True, random_state=42, categories=categories
-    )
+    sports_dataset = fetch_20newsgroups(subset="train", shuffle=True, random_state=42, categories=categories)
 
     print_sports_statistics(sports_dataset, verbose)
     return sports_dataset
@@ -118,13 +116,9 @@ def _prepare_data(sports_dataset: Bunch) -> TrainingMetadataPaths:
     :return: a TrainingMetadataPaths for various file paths for the training job.
     """
 
-    context_message = TrainingMessage(
-        role=CONTEXT_MESSAGE["role"], content=CONTEXT_MESSAGE["content"]
-    )
+    context_message = TrainingMessage(role=CONTEXT_MESSAGE["role"], content=CONTEXT_MESSAGE["content"])
     # get all the labels from the source dataset
-    labels = [
-        sports_dataset.target_names[x].split(".")[-1] for x in sports_dataset["target"]
-    ]
+    labels = [sports_dataset.target_names[x].split(".")[-1] for x in sports_dataset["target"]]
     # get all the content text from the source dataset
     texts = [text.strip() for text in sports_dataset["data"]]
 
@@ -183,9 +177,7 @@ def _fine_tune(
         TimeElapsedColumn(),
         transient=True,
     ) as progress:
-        task = progress.add_task(
-            f"Fine-Tuning Job '{job_id}': {fine_tune_results.status}"
-        )
+        task = progress.add_task(f"Fine-Tuning Job '{job_id}': {fine_tune_results.status}")
 
         while fine_tune_results.status not in ["succeeded", "failed", "cancelled"]:
             # While the job isn't in a terminal state, let's wait and occasionally check in.
@@ -291,12 +283,8 @@ def _create_or_reuse_tuning_job(
         print(f"Discarding previous fine-tuning job to create a new one")
 
     train_file = client.files.create(file=open(paths.output, "rb"), purpose="fine-tune")
-    fine_tuning_job = client.fine_tuning.jobs.create(
-        training_file=train_file.id, model="gpt-4o-mini-2024-07-18"
-    )
-    print(
-        f"Job '{fine_tuning_job.id}' created! This may take 30-40 minutes to complete..."
-    )
+    fine_tuning_job = client.fine_tuning.jobs.create(training_file=train_file.id, model="gpt-4o-mini-2024-07-18")
+    print(f"Job '{fine_tuning_job.id}' created! This may take 30-40 minutes to complete...")
     job_id = fine_tuning_job.id
     _update_metadata(job_id, paths)
     return job_id
@@ -307,9 +295,7 @@ def _get_job_id_from_saved_metadata(paths: TrainingMetadataPaths):
         data = f.read()
         metadata: TrainingMetadata = TrainingMetadata.model_validate_json(data)
         job_id = metadata.job_id
-        print(
-            f"Using fine-tuning job ID '{job_id}' from a previous run. Use --rebuild to create a new model."
-        )
+        print(f"Using fine-tuning job ID '{job_id}' from a previous run. Use --rebuild to create a new model.")
     return job_id
 
 

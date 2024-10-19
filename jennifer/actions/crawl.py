@@ -42,9 +42,7 @@ def crawl_action(url: str, rebuild: bool, must_include: str):
     )
 
     with Progress() as progress:
-        task = progress.add_task(
-            f"Scraping websites for {local_domain}...", total=len(queue)
-        )
+        task = progress.add_task(f"Scraping websites for {local_domain}...", total=len(queue))
         while queue:
             url = queue.pop()
             # We currently have to do everything we've seen, minus what we've accomplished.
@@ -54,9 +52,7 @@ def crawl_action(url: str, rebuild: bool, must_include: str):
 
             # We need a file unique enough to reflect each page we're scraping.
             sanitized_url = url[8:].replace("/", "__").replace("?", "__").replace(":", "--")[:64]
-            with open(
-                text_domain_dir / f"{sanitized_url}.txt", "w", encoding="utf-8"
-            ) as f:
+            with open(text_domain_dir / f"{sanitized_url}.txt", "w", encoding="utf-8") as f:
                 try:
                     # The user agent has to be something or sites will detect we're a robot
                     # although what the agent has to be doesn't seem to matter.

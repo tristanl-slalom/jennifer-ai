@@ -25,8 +25,5 @@ def distances_from_embeddings(
         "L2": spatial.distance.euclidean,
         "Linf": spatial.distance.chebyshev,
     }
-    distances = [
-        distance_metrics[distance_metric](query_embedding, embedding)
-        for embedding in embeddings
-    ]
+    distances = [distance_metrics[distance_metric](query_embedding, embedding) for embedding in embeddings]
     return distances

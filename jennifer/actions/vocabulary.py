@@ -20,9 +20,7 @@ class VocabularyWord(Enum):
     FINE_TUNING = "fine-tuning"
 
 
-def vocabulary_action(
-    word: VocabularyWord, age: int, temperature: Optional[float], top_p: Optional[float]
-):
+def vocabulary_action(word: VocabularyWord, age: int, temperature: Optional[float], top_p: Optional[float]):
     """
     Simply looks up the word and uses generative AI to create an explanation of it
     in terms spoken by a stereotypical X-year-old, where X defaults to 5.
@@ -51,9 +49,7 @@ def vocabulary_action(
     }
     selected_user_message = user_messages_per_word[word]
 
-    system_messages = [
-        {"role": "system", "content": message} for message in system_messages
-    ]
+    system_messages = [{"role": "system", "content": message} for message in system_messages]
 
     user_messages = [{"role": "user", "content": selected_user_message}]
 

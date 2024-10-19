@@ -27,9 +27,7 @@ def print_sports_statistics(sports_dataset: Bunch, verbose: bool):
         len([e for e in sports_dataset.target if e == 0]),
         len([e for e in sports_dataset.target if e == 1]),
     )
-    print(
-        f"Total examples: {len_all}, Baseball examples: {len_baseball}, Hockey examples: {len_hockey}"
-    )
+    print(f"Total examples: {len_all}, Baseball examples: {len_baseball}, Hockey examples: {len_hockey}")
 
 
 def print_job_outcome(fine_tune_results: FineTuningJob, job_id: str):

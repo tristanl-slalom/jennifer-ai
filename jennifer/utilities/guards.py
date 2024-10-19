@@ -4,9 +4,7 @@ from openai.types.fine_tuning import FineTuningJob
 
 def ensure_success_or_abort(fine_tune_results: FineTuningJob):
     if fine_tune_results.status != "succeeded":
-        print(
-            f"Aborting since the job did not succeed (job {fine_tune_results.status})"
-        )
+        print(f"Aborting since the job did not succeed (job {fine_tune_results.status})")
         exit(1)
 
 

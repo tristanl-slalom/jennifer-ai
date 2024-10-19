@@ -48,6 +48,7 @@ def _read_page_for_hyperlinks(url: str) -> Set[str]:
     except InvalidURL:
         return set()
 
+
 def get_domain_hyperlinks(local_domain: str, url: str) -> Set[str]:
     """
     Load the given URL and look for links. Any unique links on the page will

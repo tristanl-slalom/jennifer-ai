@@ -19,9 +19,7 @@ def create_embeddings_action(domain: str, tokens_path: Path, rebuild: bool):
         return embeddings_path
 
     if not tokens_path.exists():
-        raise FileNotFoundError(
-            f"Tokens file '{tokens_path.stem}' not found; run tokenize first!"
-        )
+        raise FileNotFoundError(f"Tokens file '{tokens_path.stem}' not found; run tokenize first!")
 
     # Read the tokens file, though we certainly could use the original file.
     # Maybe we could do this in parallel later, or do this at the same time
@@ -32,11 +30,7 @@ def create_embeddings_action(domain: str, tokens_path: Path, rebuild: bool):
 
         def create_embedding_local(x):
             progress.advance(task)
-            return (
-                client.embeddings.create(input=x, model="text-embedding-ada-002")
-                .data[0]
-                .embedding
-            )
+            return client.embeddings.create(input=x, model="text-embedding-ada-002").data[0].embedding
 
         # Create an embedding for each text in the dataframe, and use
         # the result to create an "embeddings" column in the output.
