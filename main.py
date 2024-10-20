@@ -89,12 +89,32 @@ def training(
 
 @app.command()
 def embeddings(
-
+    rebuild: option(bool, "If set, re-runs the embeddings process even if output exists locally") = False,
+    visualization: option(bool, "If set, shows a visualization of the embeddings in 2D") = False,
+    classification: option(bool, "If set, shows a visualization of the our ability to classify ratings") = False,
+    clustering: option(bool, "If set, shows a visualization of the review clustering") = False,
+    product_description: option(str, "If provided, searches for products matching the description") = None,
+    num_results: option(int, "How many results to return if product description is set") = 1,
+    num_clusters: option(int, "How many clusters to identify in the data") = None,
+    num_reviews_per_cluster: option(int, "How many reviews to show for each cluster") = 3,
+    min_similarity: option(
+        float, "When calculating clusters that match a product, what's the minimum similarity"
+    ) = 0.3,
 ):
     """
     Leveraging the Amazon Fine Food Reviews, generate some embeddings and get recommendations.
     """
-    embeddings_action()
+    embeddings_action(
+        rebuild,
+        visualization,
+        classification,
+        clustering,
+        product_description,
+        num_results,
+        num_clusters,
+        num_reviews_per_cluster,
+        min_similarity,
+    )
 
 
 # Press the green button in the gutter to run the script.
