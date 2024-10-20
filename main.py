@@ -140,6 +140,28 @@ def search(
 
 
 @embeddings_app.command()
+def visualize(
+    rebuild: option(bool, "If set, re-runs the embeddings process even if output exists locally") = False,
+    visualization: option(bool, "If set, shows a visualization of the embeddings in 2D") = True,
+    classification: option(bool, "If set, shows a visualization of the our ability to classify ratings") = True,
+):
+    """
+    Display visualizations related to embeddings and classification of ratings. Close the graph displayed to continue.
+    """
+    embeddings_action(
+        rebuild,
+        visualization,
+        classification,
+        False,
+        None,
+        None,
+        None,
+        None,
+        0.0,
+    )
+
+
+@embeddings_app.command()
 def clusters(
     rebuild: option(bool, "If set, re-runs the embeddings process even if output exists locally") = False,
     visualization: option(bool, "If set, shows a visualization of the embeddings in 2D") = False,

@@ -23,12 +23,50 @@ from jennifer.utilities.embeddings import (
     cosine_similarity,
     create_embedding,
 )
+from jennifer.utilities.plots import PLOT_COLORS
 
-PLOT_COLORS = (
-    ["blue", "green", "red", "cyan", "magenta", "yellow", "black", "darkseagreen"]
-    + ["lightsteelblue", "lightyellow", "lime", "limegreen", "linen", "maroon"]
-    + ["mediumaquamarine", "mediumblue", "hotpink", "indianred", "indigo", "orange"]
-)
+
+def embeddings_action(
+    rebuild: bool,
+    show_visualization: bool,
+    show_classification: bool,
+    show_clustering: bool,
+    product_description: Optional[str],
+    num_results: Optional[int],
+    num_clusters: Optional[int],
+    num_reviews_per_cluster: Optional[int],
+    min_similarity: float,
+):
+    """
+    Following the tutorial as laid out in our week-5 presentation. Use arguments to determine
+    whether we want to show various matplot graphs. Gather the data and calculate embeddings
+    with the latest models. Use an optional product description to show related reviews.
+    Specify a number of clusters to group the reviews into a number of high level
+    commonalities. You can specify both, but this may not work with every search term,
+    number of clusters, and the amount of data we have. Expect errors!
+    """
+    client = OpenAI()
+
+    dataset = _obtain_dataset(client, rebuild)
+
+    if show_visualization:
+        _visualize_in_2d(dataset)
+
+    if show_classification:
+        _classification_using_embeddings(dataset)
+
+    if product_description and num_results:
+        dataset = _text_search_using_embeddings(client, dataset, product_description, num_results)
+
+    if num_clusters and num_reviews_per_cluster:
+        _clustering_using_embeddings(
+            client,
+            dataset,
+            show_clustering,
+            num_clusters,
+            num_reviews_per_cluster,
+            min_similarity,
+        )
 
 
 def _obtain_dataset(client: OpenAI, rebuild: bool) -> DataFrame:
@@ -240,46 +278,3 @@ def _clustering_using_embeddings(
             plt.scatter(avg_x, avg_y, marker="x", color=color, s=100)
         plt.title("Clusters identified visualized in language 2d using t-SNE")
         plt.show()
-
-
-def embeddings_action(
-    rebuild: bool,
-    show_visualization: bool,
-    show_classification: bool,
-    show_clustering: bool,
-    product_description: Optional[str],
-    num_results: Optional[int],
-    num_clusters: Optional[int],
-    num_reviews_per_cluster: Optional[int],
-    min_similarity: float,
-):
-    """
-    Following the tutorial as laid out in our week-5 presentation. Use arguments to determine
-    whether we want to show various matplot graphs. Gather the data and calculate embeddings
-    with the latest models. Use an optional product description to show related reviews.
-    Specify a number of clusters to group the reviews into a number of high level
-    commonalities. You can specify both, but this may not work with every search term,
-    number of clusters, and the amount of data we have. Expect errors!
-    """
-    client = OpenAI()
-
-    dataset = _obtain_dataset(client, rebuild)
-
-    if show_visualization:
-        _visualize_in_2d(dataset)
-
-    if show_classification:
-        _classification_using_embeddings(dataset)
-
-    if product_description and num_results:
-        dataset = _text_search_using_embeddings(client, dataset, product_description, num_results)
-
-    if num_clusters and num_reviews_per_cluster:
-        _clustering_using_embeddings(
-            client,
-            dataset,
-            show_clustering,
-            num_clusters,
-            num_reviews_per_cluster,
-            min_similarity,
-        )

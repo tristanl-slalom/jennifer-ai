@@ -172,7 +172,7 @@ search term, number of clusters, and the amount of data we have. Expect errors!
 
 ```bash
 # Search for products matching a description
-jennifer embeddings --product-description beverage --num-results 3
+jennifer embeddings search "beverage" --num-results 3
 ```
 ```
 ⠧ Loading existing embeddings... 0:00:02
@@ -190,6 +190,11 @@ day. This is also an easy way to get the nutrition that mos...
 ```
 
 ```bash
+# show clusters of reviews and cluster visualization (close the graph to continue!)
+jennifer embeddings clusters --num-clusters 3 --show-clustering
+```
+
+```bash
 # show clusters of reviews and various visualizations (close the graphs to continue!)
-jennifer embeddings --num-clusters 3 --visualization --classification --clustering
+jennifer embeddings visualize
 ```
