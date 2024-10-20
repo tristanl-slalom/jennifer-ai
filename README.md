@@ -161,3 +161,35 @@ jennifer training --existing-job ftjob-se4KpuhQ7rXOf5YcCUVOVNzp\
 Provided test message determined to be hockey related
 ```
 
+## Embeddings - Week 5
+
+Gather the data and calculate embeddings with the latest models. Use 
+arguments to determine whether we want to show various matplot 
+graphs. Use an optional product description to show related reviews.
+Specify a number of clusters to group the reviews into a number of high level 
+commonalities. You can specify both, but this may not work with every 
+search term, number of clusters, and the amount of data we have. Expect errors!
+
+```bash
+# Search for products matching a description
+jennifer embeddings --product-description beverage --num-results 3
+```
+```
+⠧ Loading existing embeddings... 0:00:02
+A sweet, refreshing drink!:  I've never been much of a soda drinker, 
+so I'm always on the lookout for alternative beverages like juice and
+tea.  Lately, I've been swept up in the craze of coconut wate...
+
+Refreshing and healthy drink:  I was delighted to receive this new 
+V8 drink as I've been a fan of V8 for a long time as it not only is
+healthy, but it tastes really good.  I don't know if it gives mor...
+
+Yum!:  I loved the V8 Pomegranate Blueberry energy drink! It was very
+good and has some of the fruits and veggies that we try to pack in all
+day. This is also an easy way to get the nutrition that mos...
+```
+
+```bash
+# show clusters of reviews and various visualizations (close the graphs to continue!)
+jennifer embeddings --num-clusters 3 --visualization --classification --clustering
+```

@@ -30,3 +30,9 @@ scikit-learn >= 1.5.2
 
 # Pydantic for sweet, sweet serialization
 pydantic >= 2.9.2
+
+# embeddings plots
+matplotlib >= 3.9.2
+
+# embeddings calculations
+numpy >= 2.1.2
