@@ -87,30 +87,82 @@ def training(
     training_action(existing_job, test_message, rebuild, verbose)
 
 
-@app.command()
-def embeddings(
-    rebuild: option(bool, "If set, re-runs the embeddings process even if output exists locally") = False,
+embeddings_app = typer.Typer()
+app.add_typer(embeddings_app, name="embeddings", help="Various sub-commands around generating and using embeddings")
+
+
+@embeddings_app.command("build")
+def embeddings_build(
+    rebuild: option(bool, "If set, re-runs the embeddings process even if output exists locally") = True,
     visualization: option(bool, "If set, shows a visualization of the embeddings in 2D") = False,
     classification: option(bool, "If set, shows a visualization of the our ability to classify ratings") = False,
-    clustering: option(bool, "If set, shows a visualization of the review clustering") = False,
-    product_description: option(str, "If provided, searches for products matching the description") = None,
-    num_results: option(int, "How many results to return if product description is set") = 1,
-    num_clusters: option(int, "How many clusters to identify in the data") = None,
-    num_reviews_per_cluster: option(int, "How many reviews to show for each cluster") = 3,
-    min_similarity: option(
-        float, "When calculating clusters that match a product, what's the minimum similarity"
-    ) = 0.3,
 ):
     """
-    Leveraging the Amazon Fine Food Reviews, generate some embeddings and get recommendations.
+    Leveraging the Amazon Fine Food Reviews, generate some embeddings and get recommendations. Will default
+    to rebuilding embeddings, even if they exist.
     """
     embeddings_action(
         rebuild,
         visualization,
         classification,
-        clustering,
-        product_description,
+        False,
+        None,
+        None,
+        None,
+        None,
+        0.0,
+    )
+
+
+@embeddings_app.command()
+def search(
+    search_term: argument(str, "Searches for products matching the description"),
+    rebuild: option(bool, "If set, re-runs the embeddings process even if output exists locally") = False,
+    visualization: option(bool, "If set, shows a visualization of the embeddings in 2D") = False,
+    classification: option(bool, "If set, shows a visualization of the our ability to classify ratings") = False,
+    num_results: option(int, "How many results to return if product description is set") = 1,
+):
+    """
+    Search Amazon Food Reviews with embeddings for a specific search term. Will default to reusing
+    embeddings if they exist.
+    """
+    embeddings_action(
+        rebuild,
+        visualization,
+        classification,
+        False,
+        search_term,
         num_results,
+        None,
+        None,
+        0.0,
+    )
+
+
+@embeddings_app.command()
+def clusters(
+    rebuild: option(bool, "If set, re-runs the embeddings process even if output exists locally") = False,
+    visualization: option(bool, "If set, shows a visualization of the embeddings in 2D") = False,
+    classification: option(bool, "If set, shows a visualization of the our ability to classify ratings") = False,
+    show_clustering: option(bool, "If set, shows a visualization of the review clustering") = False,
+    num_clusters: option(int, "How many clusters to identify in the data") = 4,
+    num_reviews_per_cluster: option(int, "How many reviews to show for each cluster") = 3,
+    min_similarity: option(
+        float, "When calculating clusters that match a product, what's the minimum similarity"
+    ) = 0.3,
+
+):
+    """
+    Determine clusters of common themes across the reviews. Will default to reusing
+    embeddings if they exist.
+    """
+    embeddings_action(
+        rebuild,
+        visualization,
+        classification,
+        show_clustering,
+        None,
+        None,
         num_clusters,
         num_reviews_per_cluster,
         min_similarity,

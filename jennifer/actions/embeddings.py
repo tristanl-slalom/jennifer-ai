@@ -31,7 +31,7 @@ PLOT_COLORS = (
 )
 
 
-def obtain_dataset(client: OpenAI, rebuild: bool) -> DataFrame:
+def _obtain_dataset(client: OpenAI, rebuild: bool) -> DataFrame:
     """
     The filtered dataset without embeddings is added as a resource of this project.
     We'll calculate embeddings for the data and store that on our local machine for
@@ -76,7 +76,7 @@ def obtain_dataset(client: OpenAI, rebuild: bool) -> DataFrame:
     return reviews_dataframe
 
 
-def visualize_in_2d(df: DataFrame):
+def _visualize_in_2d(df: DataFrame):
     with Progress(
         SpinnerColumn(),
         *Progress.get_default_columns(),
@@ -114,7 +114,7 @@ def visualize_in_2d(df: DataFrame):
         plt.show()
 
 
-def classification_using_embeddings(df: DataFrame):
+def _classification_using_embeddings(df: DataFrame):
     # split data into train and test
     x_train, x_test, y_train, y_test = train_test_split(
         list(df.embeddings.values), df.Score, test_size=0.2, random_state=42
@@ -133,7 +133,7 @@ def classification_using_embeddings(df: DataFrame):
     plot_multiclass_precision_recall(probabilities, y_test, [1, 2, 3, 4, 5], clf)
 
 
-def text_search_using_embeddings(client: OpenAI, df: DataFrame, product_description: str, num_results: int):
+def _text_search_using_embeddings(client: OpenAI, df: DataFrame, product_description: str, num_results: int):
     product_embedding = create_embedding(client, product_description)
 
     df["similarity"] = df.embeddings.apply(lambda x: cosine_similarity(x, product_embedding))
@@ -151,7 +151,7 @@ def text_search_using_embeddings(client: OpenAI, df: DataFrame, product_descript
     return df.sort_values("similarity", ascending=False)
 
 
-def clustering_using_embeddings(
+def _clustering_using_embeddings(
     client: OpenAI,
     df: DataFrame,
     show_clustering: bool,
@@ -263,26 +263,19 @@ def embeddings_action(
     """
     client = OpenAI()
 
-    dataset = obtain_dataset(client, rebuild)
+    dataset = _obtain_dataset(client, rebuild)
 
     if show_visualization:
-        visualize_in_2d(dataset)
+        _visualize_in_2d(dataset)
 
     if show_classification:
-        classification_using_embeddings(dataset)
-
-    if not product_description and not num_clusters:
-        print(
-            "Food review embeddings are available, specify --product-description "
-            "\n and/or --num-clusters to see more information"
-        )
-        exit(1)
+        _classification_using_embeddings(dataset)
 
     if product_description and num_results:
-        dataset = text_search_using_embeddings(client, dataset, product_description, num_results)
+        dataset = _text_search_using_embeddings(client, dataset, product_description, num_results)
 
     if num_clusters and num_reviews_per_cluster:
-        clustering_using_embeddings(
+        _clustering_using_embeddings(
             client,
             dataset,
             show_clustering,
