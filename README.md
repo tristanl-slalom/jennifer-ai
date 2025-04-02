@@ -26,8 +26,22 @@ pip install -e .
 jennifer --help
 ```
 
-IMPORTANT: You must have your OPENAI_API_KEY set in your environment for the
+IMPORTANT: You must have your Azure OpenAI environment variables set in your environment for the
 Open AI client to function!
+
+Add these lines to your ~/.zshrc file:
+
+```commandline
+export AZURE_OPENAI_API_KEY={YOUR_TOKEN}
+export AZURE_OPENAI_ENDPOINT={YOUR_ENDPOINT}
+export OPENAI_API_VERSION={API_VERSION}
+```
+
+then run the following to load those values into your existing terminal (or just close the terminal and reopen it)
+
+```commandline
+source ~/.zshrc
+```
 
 Once installed, you'll find a series of commands, but "ask-question"
 will do all the commands internally. Assuming it works on the first try,
