@@ -1,11 +1,11 @@
-from openai import OpenAI
+from openai import AzureOpenAI
 
 
 def haiku_action(topic="recursion in programming"):
     """
     Generate a haiku with the provided topic.
     """
-    client = OpenAI()
+    client = AzureOpenAI()
 
     completion = client.chat.completions.create(
         model="gpt-4o-mini",

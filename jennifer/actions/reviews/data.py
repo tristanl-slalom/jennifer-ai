@@ -2,7 +2,7 @@ from pathlib import Path
 
 import pandas as pd
 import tiktoken
-from openai import OpenAI
+from openai import AzureOpenAI
 from pandas import DataFrame
 from rich.progress import Progress
 
@@ -26,7 +26,7 @@ def load_review_data(input_file_path: Path, max_tokens: int):
     return df
 
 
-def add_embedding_column(client: OpenAI, df: DataFrame) -> DataFrame:
+def add_embedding_column(client: AzureOpenAI, df: DataFrame) -> DataFrame:
     with Progress() as progress:
         task = progress.add_task("Creating embeddings...", total=len(df))
 

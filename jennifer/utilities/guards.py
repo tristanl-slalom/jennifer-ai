@@ -1,4 +1,4 @@
-from openai import OpenAI, NotFoundError
+from openai import AzureOpenAI, NotFoundError
 from openai.types.fine_tuning import FineTuningJob
 
 
@@ -8,7 +8,7 @@ def ensure_success_or_abort(fine_tune_results: FineTuningJob):
         exit(1)
 
 
-def retrieve_job_or_abort(client: OpenAI, job_id: str) -> FineTuningJob:
+def retrieve_job_or_abort(client: AzureOpenAI, job_id: str) -> FineTuningJob:
     try:
         return client.fine_tuning.jobs.retrieve(job_id)
     except NotFoundError:

@@ -4,7 +4,7 @@ from typing import Optional
 import matplotlib
 import matplotlib.pyplot as plt
 import pandas as pd
-from openai import OpenAI
+from openai import AzureOpenAI
 from pandas import DataFrame
 from rich.progress import Progress, SpinnerColumn, TimeElapsedColumn, TextColumn
 from sklearn.cluster import KMeans
@@ -45,7 +45,7 @@ def embeddings_action(
     commonalities. You can specify both, but this may not work with every search term,
     number of clusters, and the amount of data we have. Expect errors!
     """
-    client = OpenAI()
+    client = AzureOpenAI()
 
     dataset = _obtain_dataset(client, rebuild)
 
@@ -69,7 +69,7 @@ def embeddings_action(
         )
 
 
-def _obtain_dataset(client: OpenAI, rebuild: bool) -> DataFrame:
+def _obtain_dataset(client: AzureOpenAI, rebuild: bool) -> DataFrame:
     """
     The filtered dataset without embeddings is added as a resource of this project.
     We'll calculate embeddings for the data and store that on our local machine for
@@ -171,7 +171,7 @@ def _classification_using_embeddings(df: DataFrame):
     plot_multiclass_precision_recall(probabilities, y_test, [1, 2, 3, 4, 5], clf)
 
 
-def _text_search_using_embeddings(client: OpenAI, df: DataFrame, product_description: str, num_results: int):
+def _text_search_using_embeddings(client: AzureOpenAI, df: DataFrame, product_description: str, num_results: int):
     product_embedding = create_embedding(client, product_description)
 
     df["similarity"] = df.embeddings.apply(lambda x: cosine_similarity(x, product_embedding))
@@ -190,7 +190,7 @@ def _text_search_using_embeddings(client: OpenAI, df: DataFrame, product_descrip
 
 
 def _clustering_using_embeddings(
-    client: OpenAI,
+    client: AzureOpenAI,
     df: DataFrame,
     show_clustering: bool,
     num_clusters: int,

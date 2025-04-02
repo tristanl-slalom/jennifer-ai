@@ -1,7 +1,7 @@
 from enum import Enum
 from typing import Optional
 
-from openai import OpenAI
+from openai import AzureOpenAI
 
 
 class VocabularyWord(Enum):
@@ -25,7 +25,7 @@ def vocabulary_action(word: VocabularyWord, age: int, temperature: Optional[floa
     Simply looks up the word and uses generative AI to create an explanation of it
     in terms spoken by a stereotypical X-year-old, where X defaults to 5.
     """
-    client = OpenAI()
+    client = AzureOpenAI()
     system_messages = [
         "I am trying to help the user understand generative AI terms",
         f"I know the user is {age} years old",
@@ -56,11 +56,8 @@ def vocabulary_action(word: VocabularyWord, age: int, temperature: Optional[floa
     completion = client.chat.completions.create(
         model="gpt-4o-mini",
         messages=system_messages + user_messages,
-        stream=True,
         temperature=temperature,
         top_p=top_p,
     )
 
-    for chunk in completion:
-        if chunk.choices[0].delta.content is not None:
-            print(chunk.choices[0].delta.content, end="")
+    print(completion.choices[0].message.content)

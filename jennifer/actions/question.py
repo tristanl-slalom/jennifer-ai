@@ -1,13 +1,13 @@
 import numpy as np
 import pandas as pd
-from openai import OpenAI
+from openai import AzureOpenAI
 
 from jennifer.actions.scraper.embeddings import EmbeddingsMetadata
 from jennifer.utilities.context import create_context
 
 
 def question_action(embeddings_data: EmbeddingsMetadata, question: str, max_tokens=None, stop_sequence=None):
-    client = OpenAI()
+    client = AzureOpenAI()
 
     df = pd.read_csv(embeddings_data.embeddings_path, index_col=0)
     df["embeddings"] = df["embeddings"].apply(eval).apply(np.array)

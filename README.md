@@ -27,7 +27,7 @@ jennifer --help
 ```
 
 IMPORTANT: You must have your OPENAI_API_KEY set in your environment for the
-OpenAI client to function!
+Open AI client to function!
 
 Once installed, you'll find a series of commands, but "ask-question"
 will do all the commands internally. Assuming it works on the first try,
@@ -41,7 +41,7 @@ the needed data, but further requests should go quickly.
 
 ## Haiku - Week 1
 
-Uses the OpenAI Completion API to generate a haiku, defaulting to the
+Uses the Open AI Completion API to generate a haiku, defaulting to the
 tutorial topic of recursive programming, but you can set your own topic
 using the optional "--topic" argument.
 

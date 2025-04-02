@@ -1,7 +1,7 @@
 from typing import List
 
 from matplotlib.lines import Line2D
-from openai import OpenAI
+from openai import AzureOpenAI
 from scipy import spatial
 from sklearn.metrics import average_precision_score, precision_recall_curve
 
@@ -16,7 +16,7 @@ def distances_from_embeddings(
     distance_metric="cosine",
 ) -> List[List]:
     """
-    Originally this was a method in OpenAI's utilities module, but they seemed
+    Originally this was a method in Open AI's utilities module, but they seemed
     to have removed it. I found this online; it seems to do the trick.
 
     So far we only seem to use cosine, and this function could be simplified to
@@ -102,5 +102,5 @@ def cosine_similarity(a, b):
     return np.dot(a, b) / (np.linalg.norm(a) * np.linalg.norm(b))
 
 
-def create_embedding(client: OpenAI, input_text: str):
+def create_embedding(client: AzureOpenAI, input_text: str):
     return client.embeddings.create(input=input_text, model="text-embedding-3-small").data[0].embedding
