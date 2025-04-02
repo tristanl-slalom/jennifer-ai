@@ -4,7 +4,7 @@ from typing import List, Optional
 import base64
 
 import pandas as pd
-from openai import OpenAI
+from openai import AzureOpenAI
 from openai.types.fine_tuning import FineTuningJob
 from pandas import DataFrame
 from pydantic import BaseModel
@@ -79,7 +79,7 @@ def training_action(
     paths = _prepare_data(sports_dataset)
 
     # Fine-tune the base model with our training data.
-    client = OpenAI()
+    client = AzureOpenAI()
     fine_tune_results = _fine_tune(client, existing_job, paths, rebuild, verbose)
 
     # Use the fine-tuned model from the job with a test string
@@ -157,7 +157,7 @@ def _prepare_data(sports_dataset: Bunch) -> TrainingMetadataPaths:
 
 
 def _fine_tune(
-    client: OpenAI,
+    client: AzureOpenAI,
     existing_job: str,
     paths: TrainingMetadataPaths,
     rebuild: bool,
@@ -203,7 +203,7 @@ def _fine_tune(
     return fine_tune_results
 
 
-def _use_model(client: OpenAI, model: str, test_message: Optional[str]):
+def _use_model(client: AzureOpenAI, model: str, test_message: Optional[str]):
     """
     Given the model from the fine-tuning job, run the test message against it.
     """
@@ -236,7 +236,7 @@ def _use_model(client: OpenAI, model: str, test_message: Optional[str]):
 
 
 def gather_fine_tune_results(
-    client: OpenAI, fine_tune_results: FineTuningJob, paths: TrainingMetadataPaths
+    client: AzureOpenAI, fine_tune_results: FineTuningJob, paths: TrainingMetadataPaths
 ) -> DataFrame:
     """
     Fine-tuning jobs have result files we can pull and examine. I don't understand
@@ -254,7 +254,7 @@ def gather_fine_tune_results(
 
 
 def _create_or_reuse_tuning_job(
-    client: OpenAI,
+    client: AzureOpenAI,
     paths: TrainingMetadataPaths,
     existing_job: Optional[str],
     rebuild: bool,

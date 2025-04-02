@@ -1,10 +1,10 @@
-from openai import OpenAI
+from openai import AzureOpenAI
 from pandas import DataFrame
 
 from jennifer.utilities.embeddings import distances_from_embeddings
 
 
-def create_context(client: OpenAI, question: str, df: DataFrame, max_len=1800):
+def create_context(client: AzureOpenAI, question: str, df: DataFrame, max_len=1800):
     """
     Create a context for a question by finding the most similar context from the dataframe
     """

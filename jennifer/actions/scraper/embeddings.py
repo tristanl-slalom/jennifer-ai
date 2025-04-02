@@ -1,7 +1,7 @@
 from pathlib import Path
 
 import pandas as pd
-from openai import OpenAI
+from openai import AzureOpenAI
 from rich.progress import Progress
 
 from jennifer.actions.scraper.tokenize import TokenizeMetadata, tokenize_metadata_from_url
@@ -35,7 +35,7 @@ def create_embeddings_action(tokenize_metadata: TokenizeMetadata, rebuild: bool)
     provided token CSV path.
     """
 
-    client = OpenAI()
+    client = AzureOpenAI()
 
     embeddings_path = tokenize_metadata.processed_directory_path / f"{tokenize_metadata.local_domain}-embeddings.csv"
     metadata = embeddings_metadata_from_tokenize(embeddings_path, tokenize_metadata)
